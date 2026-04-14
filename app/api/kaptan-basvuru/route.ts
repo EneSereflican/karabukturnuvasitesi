@@ -3,6 +3,14 @@ import { createServiceClient } from '@/lib/supabase/server';
 import { generateToken } from '@/lib/tokens';
 import { sendCaptainWelcomeEmail } from '@/lib/email';
 
+function sanitizeFileName(fileName: string): string {
+  return fileName
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9.-]/g, '_')
+    .replace(/_{2,}/g, '_')
+}
+
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -155,7 +163,8 @@ export async function POST(request: NextRequest) {
     for (const [documentType, file] of Object.entries(files)) {
       try {
         const timestamp = Date.now();
-        const filePath = `teams/${teamId}/captains/${captainId}/${documentType}/${timestamp}-${file.name}`;
+        const sanitizedName = sanitizeFileName(file.name)
+        const filePath = `teams/${teamId}/captains/${captainId}/${documentType}/${timestamp}-${sanitizedName}`;
 
         // Upload to Supabase Storage
         const arrayBuffer = await file.arrayBuffer();

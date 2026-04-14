@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 
+function sanitizeFileName(fileName: string): string {
+  return fileName
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9.-]/g, '_')
+    .replace(/_{2,}/g, '_')
+}
+
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -179,7 +187,8 @@ export async function POST(request: NextRequest) {
       try {
         const timestamp = Date.now();
         const mappedDocumentType = DOCUMENT_TYPE_MAP[documentType];
-        const filePath = `teams/${teamId}/players/${playerId}/${mappedDocumentType}/${timestamp}-${file.name}`;
+        const sanitizedName = sanitizeFileName(file.name)
+        const filePath = `teams/${teamId}/players/${playerId}/${mappedDocumentType}/${timestamp}-${sanitizedName}`;
 
         // Upload to Supabase Storage
         const arrayBuffer = await file.arrayBuffer();
