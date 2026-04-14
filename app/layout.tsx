@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: 'Turnuva Başvuru Sistemi | 2026 Bahar Sezonu',
   description: 'Kamu Kurumları Bahar Futbol Turnuvası — Resmi Online Başvuru ve Takip Sistemi',
+  icons: {
+    icon: '/icon.svg',
+  },
 }
 
 export default function RootLayout({
