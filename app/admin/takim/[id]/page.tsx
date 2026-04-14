@@ -98,7 +98,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
     .eq('team_id', teamData.id);
 
   const totalMembers = 1 + (playersData?.length ?? 0);
-  const captainDocuments = documentsData.filter(
+  const captainDocuments = (documentsData ?? []).filter(
     (d) => d.owner_type === 'captain' && d.owner_id === captainData.id
   );
 
@@ -323,7 +323,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
           </div>
 
           {/* Documents Section */}
-          {captainDocuments.length > 0 && (
+          {(captainDocuments ?? []).length > 0 && (
             <>
               <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
 
@@ -405,7 +405,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
                 <PlayerCard
                   key={player.id}
                   player={player}
-                  documents={documentsData.filter(
+                  documents={(documentsData ?? []).filter(
                     (d) =>
                       d.owner_type === 'player' && d.owner_id === player.id
                   )}
