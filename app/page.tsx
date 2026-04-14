@@ -227,7 +227,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 space-y-2">
             <p className="text-gray-300">
-              Karabük Kamu Kurumları Bahar Futbol Turnuvası 2025
+              Karabük Kamu Kurumları Bahar Futbol Turnuvası 2026
             </p>
             <p className="text-sm text-gray-500">
               Tüm hakları saklıdır.
