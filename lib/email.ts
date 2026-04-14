@@ -36,8 +36,8 @@ Oyuncularınıza iletmeniz için davet linki:
 ${playerUrl}`;
 
   return resend.emails.send({
-    from: 'onboarding@resend.dev',
-    to: 'easereflican@gmail.com',
+    from: 'basvuru@turnuvaburada.com.tr',
+    to: to,
     subject: `Takım başvurunuz alındı — ${teamName}`,
     text: emailContent,
   });
