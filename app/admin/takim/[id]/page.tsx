@@ -68,7 +68,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   }
 
   // Fetch captain
-  const { data: captainData, error: captainError } = await supabase
+  const { data: captainDataRaw, error: captainError } = await supabase
     .from('captains')
     .select(
       'id, first_name, last_name, tc_no, phone, email, institution, jersey_number'
@@ -76,12 +76,14 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
     .eq('team_id', teamData.id)
     .single();
 
-  if (captainError || !captainData) {
+  if (captainError || !captainDataRaw) {
     notFound();
   }
 
+  const captainData = captainDataRaw ?? null;
+
   // Fetch players
-  const { data: playersData = [] } = await supabase
+  const { data: playersDataRaw } = await supabase
     .from('players')
     .select(
       'id, first_name, last_name, tc_no, phone, email, institution, jersey_number, created_at'
@@ -89,16 +91,20 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
     .eq('team_id', teamData.id)
     .order('created_at', { ascending: true });
 
+  const playersData = playersDataRaw ?? [];
+
   // Fetch documents
-  const { data: documentsData = [] } = await supabase
+  const { data: documentsDataRaw } = await supabase
     .from('documents')
     .select(
       'id, owner_type, owner_id, document_type, file_path, file_name, file_size, mime_type'
     )
     .eq('team_id', teamData.id);
 
-  const totalMembers = 1 + (playersData?.length ?? 0);
-  const captainDocuments = (documentsData ?? []).filter(
+  const documentsData = documentsDataRaw ?? [];
+
+  const totalMembers = 1 + playersData.length;
+  const captainDocuments = documentsData.filter(
     (d) => d.owner_type === 'captain' && d.owner_id === captainData.id
   );
 
@@ -323,7 +329,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
           </div>
 
           {/* Documents Section */}
-          {(captainDocuments ?? []).length > 0 && (
+          {captainDocuments.length > 0 && (
             <>
               <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
 
@@ -376,7 +382,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
         </div>
 
         {/* Players List */}
-        {playersData?.length > 0 ? (
+        {playersData.length > 0 ? (
           <div
             style={{
               backgroundColor: '#1a2e1d',
@@ -395,17 +401,17 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
                 }}
                 className="text-xs px-2 py-0.5 rounded-full"
               >
-                {playersData?.length} kişi
+                {playersData.length} kişi
               </span>
             </div>
 
             {/* Players */}
             <div className="space-y-2">
-              {playersData?.map((player) => (
+              {playersData.map((player) => (
                 <PlayerCard
                   key={player.id}
                   player={player}
-                  documents={(documentsData ?? []).filter(
+                  documents={documentsData.filter(
                     (d) =>
                       d.owner_type === 'player' && d.owner_id === player.id
                   )}
