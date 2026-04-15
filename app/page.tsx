@@ -175,6 +175,72 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <section className="py-16 px-4 bg-[#0d1f12]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div
+              style={{
+                display: 'inline-block',
+                backgroundColor: 'rgba(240, 165, 0, 0.2)',
+                color: '#f0a500',
+                fontSize: '14px',
+                padding: '4px 12px',
+                borderRadius: '999px',
+                marginBottom: '16px',
+              }}
+            >
+              Önceki Turnuvalardan
+            </div>
+            <h2 className="text-3xl font-bold text-white">Anlar ve Anılar</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Photo 1 - Trophies */}
+            <div
+              style={{
+                backgroundColor: '#1a2e1d',
+                borderColor: '#2d4a32',
+              }}
+              className="border rounded-2xl overflow-hidden"
+            >
+              <img
+                src="/foto-kupalar.jpg"
+                className="w-full h-72 object-cover"
+                alt="Turnuva kupaları"
+              />
+              <div className="p-4">
+                <p className="text-white font-semibold">Şampiyonluk Kupaları</p>
+                <p className="text-gray-400 text-sm mt-1">
+                  Önceki turnuvalardan kazananlarımız
+                </p>
+              </div>
+            </div>
+
+            {/* Photo 2 - Atmosphere */}
+            <div
+              style={{
+                backgroundColor: '#1a2e1d',
+                borderColor: '#2d4a32',
+              }}
+              className="border rounded-2xl overflow-hidden"
+            >
+              <img
+                src="/foto-taraftarlar.jpg"
+                className="w-full h-72 object-cover"
+                alt="Turnuva atmosferi"
+              />
+              <div className="p-4">
+                <p className="text-white font-semibold">Turnuva Atmosferi</p>
+                <p className="text-gray-400 text-sm mt-1">
+                  Her maçın kendine has bir hikayesi var
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#1a2e1d]">
         <div className="max-w-7xl mx-auto">
