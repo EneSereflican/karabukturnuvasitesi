@@ -1,11 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import bcrypt from 'bcryptjs';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { secret, email, password, name } = body;
+    const text = await request.text();
+    console.log('Raw body:', text);
+
+    if (!text) {
+      return Response.json({ error: 'Body boş' }, { status: 400 });
+    }
+
+    const { secret, email, password, name } = JSON.parse(text);
 
     // Verify secret
     if (secret !== process.env.SEED_SECRET) {
