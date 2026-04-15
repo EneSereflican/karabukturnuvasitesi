@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
       .eq('email', email)
       .single();
 
+    console.log('Admin found:', admin?.email);
+    console.log('Password hash:', admin?.password_hash?.substring(0, 20));
+
     if (error || !admin) {
       return NextResponse.json(
         { error: 'Geçersiz e-posta veya şifre' },
@@ -34,6 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Verify password
     const valid = await bcrypt.compare(password, admin.password_hash);
+    console.log('Password valid:', valid);
     if (!valid) {
       return NextResponse.json(
         { error: 'Geçersiz e-posta veya şifre' },
