@@ -24,6 +24,7 @@ const documentTypeLabels: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Guncelle endpoint hit');
     const formData = await request.formData();
     const team_key = formData.get('team_key') as string;
     const player_id = formData.get('player_id') as string;
@@ -194,7 +195,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('Update error:', error);
+    console.error('Guncelle error:', error);
     return NextResponse.json(
       { error: 'Sunucu hatası' },
       { status: 500 }
