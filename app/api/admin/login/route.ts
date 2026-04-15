@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase/server';
 import { createAdminToken } from '@/lib/admin-auth';
-import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
@@ -16,52 +14,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createServiceClient();
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
-    // Fetch admin from database
-    const { data: admin, error } = await supabase
-      .from('admins')
-      .select('id, email, password_hash, name')
-      .eq('email', email)
-      .single();
-
-    console.log('Admin found:', admin?.email);
-    console.log('Password hash:', admin?.password_hash?.substring(0, 20));
-
-    if (error || !admin) {
+    if (email !== adminEmail || password !== adminPassword) {
       return NextResponse.json(
         { error: 'Geçersiz e-posta veya şifre' },
         { status: 401 }
       );
     }
 
-    // Verify password
-    const valid = await bcrypt.compare(password, admin.password_hash);
-    console.log('Password valid:', valid);
-    if (!valid) {
-      return NextResponse.json(
-        { error: 'Geçersiz e-posta veya şifre' },
-        { status: 401 }
-      );
-    }
+    const token = await createAdminToken({ id: 'admin', email });
 
-    // Create JWT token
-    const token = await createAdminToken({ id: admin.id, email: admin.email });
-
-    // Set HTTP-only cookie
     const cookieStore = await cookies();
     cookieStore.set('admin_token', token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 8, // 8 hours
+      maxAge: 60 * 60 * 8,
       path: '/',
     });
 
-    return NextResponse.json(
-      { success: true, name: admin.name },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
