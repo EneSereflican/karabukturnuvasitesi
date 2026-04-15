@@ -4,8 +4,18 @@ const secret = new TextEncoder().encode(
   process.env.ADMIN_SECRET || 'default-secret'
 );
 
-export async function createAdminToken(): Promise<string> {
-  const token = await new SignJWT({ role: 'admin' })
+interface AdminTokenPayload {
+  id: string;
+  email: string;
+}
+
+export async function createAdminToken(
+  payload: AdminTokenPayload
+): Promise<string> {
+  const token = await new SignJWT({
+    ...payload,
+    role: 'admin',
+  })
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('8h')
     .sign(secret);
