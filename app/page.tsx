@@ -59,20 +59,25 @@ export default function Home() {
             marginBottom: '24px',
             whiteSpace: 'nowrap'
           }}>
-            2026 Bahar Sezonu
+            6. Bahar Futbol Turnuvası
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Karabük Kamu Kurumları
+          <div className="space-y-2">
+            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+              Karabük Kamu Kurum
             </h2>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: '#f0a500' }}>
+            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+              ve Kuruluşları Arası
+            </h2>
+            <h2 className="text-4xl md:text-6xl font-bold leading-tight" style={{ color: '#f0a500' }}>
               Bahar Futbol Turnuvası
             </h2>
           </div>
 
-          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
-            Karabük'ün kamu kurumları arasındaki dostluk ruhunu sahaya taşıyoruz.
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto text-center leading-relaxed">
+            Sporun kitlelere yayılması, spora ilginin artırılması, kamu kurumları
+            ve sivil toplum kuruluşları arasındaki iletişimin saygı, sevgi, dostluk
+            ve hoşgörü diyaloğuna dönüşmesi amacıyla düzenlenmektedir.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
