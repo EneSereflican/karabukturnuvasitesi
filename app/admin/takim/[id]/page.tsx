@@ -69,17 +69,13 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   }
 
   // Fetch captain
-  const { data: captainDataRaw, error: captainError } = await supabase
+  const { data: captainDataRaw } = await supabase
     .from('captains')
     .select(
       'id, first_name, last_name, tc_no, phone, email, institution, jersey_number'
     )
     .eq('team_id', teamData.id)
     .single();
-
-  if (captainError || !captainDataRaw) {
-    notFound();
-  }
 
   const captainData = captainDataRaw ?? null;
 
@@ -267,71 +263,72 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
         )}
 
         {/* Captain Card */}
-        <div
-          style={{
-            backgroundColor: '#1a2e1d',
-            borderColor: '#2d4a32',
-          }}
-          className="border rounded-2xl p-6 mb-6"
-        >
-          {/* Card Header */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Shield size={20} style={{ color: '#f0a500' }} />
-              <h2 className="text-white font-semibold text-lg">Takım Kaptanı</h2>
+        {captainData ? (
+          <div
+            style={{
+              backgroundColor: '#1a2e1d',
+              borderColor: '#2d4a32',
+            }}
+            className="border rounded-2xl p-6 mb-6"
+          >
+            {/* Card Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Shield size={20} style={{ color: '#f0a500' }} />
+                <h2 className="text-white font-semibold text-lg">Takım Kaptanı</h2>
+              </div>
+
+              {/* Avatar Circle */}
+              <div
+                style={{
+                  backgroundColor: '#f0a500/20',
+                  borderColor: '#f0a500/30',
+                }}
+                className="w-12 h-12 rounded-full border flex items-center justify-center"
+              >
+                <p style={{ color: '#f0a500' }} className="font-bold text-lg">
+                  {captainData.first_name?.charAt(0).toUpperCase()}
+                </p>
+              </div>
             </div>
 
-            {/* Avatar Circle */}
-            <div
-              style={{
-                backgroundColor: '#f0a500/20',
-                borderColor: '#f0a500/30',
-              }}
-              className="w-12 h-12 rounded-full border flex items-center justify-center"
-            >
-              <p style={{ color: '#f0a500' }} className="font-bold text-lg">
-                {captainData.first_name.charAt(0).toUpperCase()}
-              </p>
-            </div>
-          </div>
+            {/* Separator */}
+            <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
 
-          {/* Separator */}
-          <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
+            {/* Captain Info Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
+                <p className="text-white font-medium">
+                  {captainData.first_name} {captainData.last_name}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">TC Kimlik No</p>
+                <p className="text-white font-medium">{captainData.tc_no}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Forma Numarası</p>
+                <p className="text-white font-medium">{captainData.jersey_number}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Telefon</p>
+                <p className="text-white font-medium">{captainData.phone}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">E-posta</p>
+                <p className="text-white font-medium text-sm break-all">
+                  {captainData.email}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">Kurum</p>
+                <p className="text-white font-medium">{captainData.institution}</p>
+              </div>
+            </div>
 
-          {/* Captain Info Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-            <div>
-              <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
-              <p className="text-white font-medium">
-                {captainData.first_name} {captainData.last_name}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs mb-1">TC Kimlik No</p>
-              <p className="text-white font-medium">{captainData.tc_no}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs mb-1">Forma Numarası</p>
-              <p className="text-white font-medium">{captainData.jersey_number}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs mb-1">Telefon</p>
-              <p className="text-white font-medium">{captainData.phone}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs mb-1">E-posta</p>
-              <p className="text-white font-medium text-sm break-all">
-                {captainData.email}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs mb-1">Kurum</p>
-              <p className="text-white font-medium">{captainData.institution}</p>
-            </div>
-          </div>
-
-          {/* Documents Section */}
-          {captainDocuments.length > 0 && (
+            {/* Documents Section */}
+            {captainDocuments.length > 0 && (
             <>
               <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
 
@@ -381,7 +378,20 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
               </div>
             </>
           )}
-        </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              backgroundColor: '#0d1f12',
+              borderColor: '#2d4a32',
+            }}
+            className="border border-[#2d4a32] rounded-xl p-4 mb-6 text-center"
+          >
+            <p className="text-gray-400 text-sm">
+              Bu takım için henüz kaptan kaydı bulunmamaktadır.
+            </p>
+          </div>
+        )}
 
         {/* Players List */}
         {playersData.length > 0 ? (
