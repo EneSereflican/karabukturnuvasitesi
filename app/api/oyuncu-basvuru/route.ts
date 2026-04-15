@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       'email',
       'institution',
       'jersey_number',
-      'invite_token',
+      'team_id',
     ];
 
     for (const field of requiredFields) {
@@ -104,23 +104,21 @@ export async function POST(request: NextRequest) {
     const email = formData.get('email') as string;
     const institution = formData.get('institution') as string;
     const jerseyNumber = formData.get('jersey_number') as string;
-    const inviteToken = formData.get('invite_token') as string;
+    const teamId = formData.get('team_id') as string;
 
-    // Fetch team by invite token
+    // Fetch team by team_id
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
       .select('id, name, status, update_count')
-      .eq('player_invite_token', inviteToken)
+      .eq('id', teamId)
       .single();
 
     if (teamError || !teamData) {
       return NextResponse.json(
-        { error: 'Geçersiz davet linki' },
+        { error: 'Takım bulunamadı' },
         { status: 404 }
       );
     }
-
-    const teamId = teamData.id;
 
     // Check if team is approved
     if (teamData.status === 'approved') {

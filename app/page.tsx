@@ -33,7 +33,12 @@ export default function Home() {
             </Link>
             <Link href="/basvuru/kaptan">
               <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500]">
-                Başvuru Yap
+                Takım Oluştur
+              </Button>
+            </Link>
+            <Link href="/oyuncu-basvuru">
+              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-[#0d1f12]">
+                Takıma Katıl
               </Button>
             </Link>
           </div>
@@ -89,6 +94,21 @@ export default function Home() {
                 whiteSpace: 'nowrap'
               }}>
                 Başvuru Durumlarını Gör
+              </div>
+            </Link>
+            <Link href="/oyuncu-basvuru" className="flex-1 sm:flex-none">
+              <div style={{
+                display: 'inline-block',
+                border: '2px solid white',
+                color: 'white',
+                fontWeight: '600',
+                fontSize: '16px',
+                padding: '12px 28px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}>
+                Takıma Katıl
               </div>
             </Link>
           </div>
@@ -214,11 +234,18 @@ export default function Home() {
           <p className="text-xl text-gray-300">
             Takımınızı oluşturun ve turnuvaya katılın.
           </p>
-          <Link href="/basvuru/kaptan">
-            <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500] text-lg py-6 px-8">
-              Takım Başvurusu Oluştur
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/basvuru/kaptan">
+              <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500] text-lg py-6 px-8">
+                Takım Başvurusu Oluştur
+              </Button>
+            </Link>
+            <Link href="/oyuncu-basvuru">
+              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-[#0d1f12] text-lg py-6 px-8">
+                Takıma Katıl
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

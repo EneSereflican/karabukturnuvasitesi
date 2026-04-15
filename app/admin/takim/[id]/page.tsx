@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/server';
 import PlayerCard from '@/components/PlayerCard';
 import AdminKarar from '@/components/AdminKarar';
 import BelgeButonlari from '@/components/BelgeButonlari';
+import TeamKeyDisplay from '@/components/TeamKeyDisplay';
 import {
   Shield,
   FileText,
@@ -58,7 +59,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const { data: teamData, error: teamError } = await supabase
     .from('teams')
     .select(
-      'id, name, institution, jersey_color, status, rejection_note, update_count, created_at'
+      'id, name, institution, team_key, jersey_color, status, rejection_note, update_count, created_at'
     )
     .eq('id', id)
     .single();
@@ -163,6 +164,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
             </Link>
             <h1 className="text-2xl font-bold text-white">{teamData.name}</h1>
             <p className="text-gray-400 text-sm mt-1">{teamData.institution}</p>
+            <TeamKeyDisplay teamKey={teamData.team_key} />
           </div>
 
           {/* Status Badge */}

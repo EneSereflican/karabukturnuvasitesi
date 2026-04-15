@@ -1,29 +1,32 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useRef } from 'react';
-import { FileText, Info, XCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import {
+  FileText,
+  Info,
+  XCircle,
+  CheckCircle2,
+  Loader2,
+} from 'lucide-react';
 
-interface OyuncuFormProps {
-  inviteToken: string;
-  teamName: string;
-  teamInstitution: string;
-  spotsLeft: number;
-  totalMembers: number;
+interface TeamInfo {
+  team_id: string;
+  team_name: string;
+  institution: string;
 }
 
-export default function OyuncuForm({
-  inviteToken,
-  teamName,
-  teamInstitution,
-  spotsLeft,
-  totalMembers,
-}: OyuncuFormProps) {
+export default function PlayerApplicationPage() {
+  const [step, setStep] = useState<'key' | 'form'>('key');
+  const [teamKey, setTeamKey] = useState('');
+  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
+
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
-    tc_no: '',
     phone: '',
     email: '',
+    tc_no: '',
     institution: '',
     jersey_number: '',
   });
@@ -44,9 +47,53 @@ export default function OyuncuForm({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  // ────────────────────────────────────────────────
+  // AŞAMA 1: Anahtar doğrulama
+  // ────────────────────────────────────────────────
+
+  const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTeamKey(e.target.value.toUpperCase());
+  };
+
+  const handleKeySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/anahtar-dogrula', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team_key: teamKey }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Bir hata oluştu');
+        setLoading(false);
+        return;
+      }
+
+      setTeamInfo({
+        team_id: data.team_id,
+        team_name: data.team_name,
+        institution: data.institution,
+      });
+      setStep('form');
+      setLoading(false);
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
+      setLoading(false);
+    }
+  };
+
+  // ────────────────────────────────────────────────
+  // AŞAMA 2: Form
+  // ────────────────────────────────────────────────
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -76,14 +123,16 @@ export default function OyuncuForm({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     try {
       const form = new FormData();
+
+      // Append team_id
+      form.append('team_id', teamInfo!.team_id);
 
       // Append form fields
       Object.entries(formData).forEach(([key, value]) => {
@@ -91,9 +140,6 @@ export default function OyuncuForm({
           form.append(key, value);
         }
       });
-
-      // Append invite token
-      form.append('invite_token', inviteToken);
 
       // Append files
       Object.entries(files).forEach(([key, file]) => {
@@ -110,126 +156,182 @@ export default function OyuncuForm({
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Başvuru sırasında bir hata oluştu');
+        setError(data.error || 'Bir hata oluştu');
+        setLoading(false);
         return;
       }
 
       setSuccess(true);
-      setFormData({
-        first_name: '',
-        last_name: '',
-        tc_no: '',
-        phone: '',
-        email: '',
-        institution: '',
-        jersey_number: '',
-      });
-      setFiles({
-        tc_front: null,
-        tc_back: null,
-        work_certificate: null,
-        sgk_certificate: null,
-        passport_photo: null,
-        bank_receipt: null,
-        other_document: null,
-      });
-      setFileNames({});
+      setLoading(false);
     } catch (err) {
-      setError('Başvuru sırasında bir hata oluştu');
-      console.error(err);
-    } finally {
+      console.error('Error:', err);
+      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
       setLoading(false);
     }
   };
 
-  if (success) {
+  // ────────────────────────────────────────────────
+  // Başarı ekranı
+  // ────────────────────────────────────────────────
+
+  if (success && teamInfo) {
     return (
-      <div className="min-h-screen bg-[#0d1f12] flex items-center justify-center px-4 py-12">
-        <div className="text-center space-y-6 max-w-md">
-          <CheckCircle2 size={64} className="text-green-400 mx-auto" />
-          <h1 className="text-3xl font-bold text-white">Başvurunuz Alındı!</h1>
-          <p className="text-gray-300">
-            Belgeleriniz yetkili tarafından incelendikten sonra başvurunuz değerlendirilecektir.
+      <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-lg mx-auto text-center">
+          <CheckCircle2
+            size={64}
+            className="text-green-400 mx-auto"
+            strokeWidth={1.5}
+          />
+
+          <h1 className="text-white text-2xl font-bold mt-4">
+            Başvurunuz Alındı!
+          </h1>
+
+          <p className="text-gray-400 text-sm mt-3">
+            Belgeleriniz yetkili tarafından incelendikten sonra başvurunuz
+            değerlendirilecektir.
           </p>
-          <div className="bg-[#f0a500]/10 border border-[#f0a500]/30 rounded-lg p-4">
-            <p className="text-sm text-gray-300">
-              Başvurunuzun durumunu takip etmek için takım sorumlusundan takip linkini isteyin.
+
+          {/* Team Info Box */}
+          <div className="mt-6 bg-[#1a2e1d] border border-[#2d4a32] rounded-xl p-4 text-left">
+            <p className="text-xs text-gray-400 mb-1">Takım</p>
+            <p className="text-white font-bold text-sm mb-3">
+              {teamInfo.team_name}
             </p>
+            <p className="text-xs text-gray-400 mb-1">Kurum</p>
+            <p className="text-white text-sm">{teamInfo.institution}</p>
           </div>
+
+          {/* Home Button */}
+          <Link
+            href="/"
+            className="mt-6 inline-block bg-[#f0a500] text-[#0d1f12] font-bold px-6 py-3 rounded-xl hover:bg-[#f0a500]/90 transition-colors"
+          >
+            Ana Sayfaya Dön
+          </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#0d1f12] py-12 px-4 sm:px-6 lg:px-8">
-      {/* Team Info Card */}
-      <div className="max-w-2xl mx-auto bg-[#1a2e1d] rounded-2xl border border-[#f0a500]/30 p-6 mb-6">
-        <div className="inline-block bg-[#f0a500]/20 border border-[#f0a500]/30 rounded-full px-4 py-2 mb-4">
-          <span className="text-[#f0a500] text-sm font-semibold">Oyuncu Kaydı</span>
-        </div>
+  // ────────────────────────────────────────────────
+  // AŞAMA 1: Anahtar giriş
+  // ────────────────────────────────────────────────
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          {/* Left Side - Team Info */}
-          <div>
-            <p className="text-xs text-gray-400 mb-1">Takım</p>
-            <p className="text-lg font-bold text-white mb-3">{teamName}</p>
-            <p className="text-xs text-gray-400 mb-1">Kurum</p>
-            <p className="text-white">{teamInstitution}</p>
-          </div>
+  if (step === 'key') {
+    return (
+      <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-lg mx-auto">
+          {/* Header */}
+          <Link
+            href="/"
+            className="text-gray-400 hover:text-white text-sm transition-colors inline-block mb-4"
+          >
+            ← Ana Sayfa
+          </Link>
 
-          {/* Right Side - Capacity Indicator */}
-          <div className="w-full sm:w-auto text-right">
-            <div className="mb-4">
-              <p className="text-3xl font-bold text-[#f0a500]">
-                {totalMembers}/15
-              </p>
-              <p className="text-xs text-gray-400">kayıtlı üye</p>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mb-3 w-full sm:w-32">
-              <div className="bg-[#0d1f12] rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-[#f0a500] h-full transition-all duration-300"
-                  style={{ width: `${(totalMembers / 15) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-
-            <p className="text-xs text-gray-400">
-              {spotsLeft} boş yer kaldı
+          <div className="mb-6">
+            <span className="inline-block bg-[#f0a500] text-[#0d1f12] text-xs font-bold px-3 py-1 rounded-full mb-3">
+              Oyuncu Kaydı
+            </span>
+            <h1 className="text-white text-2xl font-bold">Takıma Katıl</h1>
+            <p className="text-gray-400 text-sm mt-2">
+              Takım sorumlusundan aldığınız anahtarı girin.
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* Form Card */}
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-4 flex gap-3">
+              <XCircle size={20} className="shrink-0 mt-0.5" />
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleKeySubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-300 text-sm font-medium mb-2">
+                Takım Anahtarı
+              </label>
+              <input
+                type="text"
+                name="team_key"
+                value={teamKey}
+                onChange={handleKeyChange}
+                placeholder="Örn: AB12CD34"
+                required
+                maxLength={8}
+                className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-12 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors text-center font-mono text-lg tracking-widest"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-[#f0a500] text-[#0d1f12] font-bold h-12 w-full rounded-xl hover:bg-[#f0a500]/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 mt-4"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Kontrol ediliyor...
+                </>
+              ) : (
+                'Devam Et'
+              )}
+            </button>
+          </form>
+        </div>
+      </main>
+    );
+  }
+
+  // ────────────────────────────────────────────────
+  // AŞAMA 2: Oyuncu formu
+  // ────────────────────────────────────────────────
+
+  return (
+    <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
       <div className="max-w-2xl mx-auto bg-[#1a2e1d] rounded-2xl border border-[#2d4a32] p-8">
+        {/* Team Info Card */}
+        <div className="bg-[#f0a500]/10 border border-[#f0a500]/30 rounded-xl p-4 mb-6 flex justify-between items-start">
+          <div>
+            <p className="text-xs text-gray-400 mb-1">Takım</p>
+            <p className="text-white font-bold mb-3">{teamInfo?.team_name}</p>
+            <p className="text-xs text-gray-400 mb-1">Kurum</p>
+            <p className="text-white">{teamInfo?.institution}</p>
+          </div>
+          <div className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full shrink-0">
+            ✓ Anahtar Doğrulandı
+          </div>
+        </div>
+
+        {/* Error Message */}
         {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex gap-3">
-            <XCircle size={20} className="text-red-400 shrink-0" />
-            <p className="text-red-400">{error}</p>
+          <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-4 flex gap-3">
+            <XCircle size={20} className="shrink-0 mt-0.5" />
+            <p className="text-sm">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Form */}
+        <form onSubmit={handleFormSubmit} className="space-y-8">
           {/* SECTION 1: Kişisel Bilgiler */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-1 h-6 bg-[#f0a500]"></div>
-              <h2 className="text-lg font-semibold text-white">Kişisel Bilgiler</h2>
-            </div>
+            <h2 className="text-lg font-semibold text-white border-l-4 border-[#f0a500] pl-3">
+              Kişisel Bilgiler
+            </h2>
 
             {/* Ad - Soyad */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="first_name" className="block text-sm text-gray-300 mb-2">
+                <label className="block text-sm text-gray-300 mb-2">
                   Ad <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  id="first_name"
                   name="first_name"
                   value={formData.first_name}
                   onChange={handleInputChange}
@@ -240,12 +342,11 @@ export default function OyuncuForm({
               </div>
 
               <div>
-                <label htmlFor="last_name" className="block text-sm text-gray-300 mb-2">
+                <label className="block text-sm text-gray-300 mb-2">
                   Soyad <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  id="last_name"
                   name="last_name"
                   value={formData.last_name}
                   onChange={handleInputChange}
@@ -259,12 +360,11 @@ export default function OyuncuForm({
             {/* Telefon - E-posta */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="phone" className="block text-sm text-gray-300 mb-2">
+                <label className="block text-sm text-gray-300 mb-2">
                   Telefon <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="tel"
-                  id="phone"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
@@ -275,12 +375,11 @@ export default function OyuncuForm({
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm text-gray-300 mb-2">
+                <label className="block text-sm text-gray-300 mb-2">
                   E-posta <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
-                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -293,12 +392,11 @@ export default function OyuncuForm({
 
             {/* TC Kimlik No */}
             <div>
-              <label htmlFor="tc_no" className="block text-sm text-gray-300 mb-2">
+              <label className="block text-sm text-gray-300 mb-2">
                 TC Kimlik No <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
-                id="tc_no"
                 name="tc_no"
                 value={formData.tc_no}
                 onChange={handleInputChange}
@@ -311,12 +409,11 @@ export default function OyuncuForm({
 
             {/* Kurum Adı */}
             <div>
-              <label htmlFor="institution" className="block text-sm text-gray-300 mb-2">
+              <label className="block text-sm text-gray-300 mb-2">
                 Kurum Adı <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
-                id="institution"
                 name="institution"
                 value={formData.institution}
                 onChange={handleInputChange}
@@ -328,12 +425,11 @@ export default function OyuncuForm({
 
             {/* Forma Numarası */}
             <div>
-              <label htmlFor="jersey_number" className="block text-sm text-gray-300 mb-2">
+              <label className="block text-sm text-gray-300 mb-2">
                 Forma Numarası <span className="text-red-400">*</span>
               </label>
               <input
                 type="number"
-                id="jersey_number"
                 name="jersey_number"
                 value={formData.jersey_number}
                 onChange={handleInputChange}
@@ -346,25 +442,22 @@ export default function OyuncuForm({
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="border-t border-[#2d4a32]"></div>
-
           {/* SECTION 2: Belgeler */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-1 h-6 bg-[#f0a500]"></div>
-              <h2 className="text-lg font-semibold text-white">Belgeler</h2>
-            </div>
+            <h2 className="text-lg font-semibold text-white border-l-4 border-[#f0a500] pl-3">
+              Belgeler
+            </h2>
 
             {/* Info Box */}
             <div className="bg-[#f0a500]/10 border border-[#f0a500]/30 rounded-lg p-4 flex gap-3">
               <Info size={16} className="text-[#f0a500] shrink-0 mt-0.5" />
               <p className="text-sm text-gray-300">
-                Tüm belgeler PDF, JPG veya PNG formatında, maksimum 5 MB olmalıdır.
+                Tüm belgeler PDF, JPG veya PNG formatında, maksimum 5 MB
+                olmalıdır.
               </p>
             </div>
 
-            {/* File Uploads Grid */}
+            {/* File Uploads */}
             <div className="space-y-4">
               {/* Row 1: TC Ön - TC Arka */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -420,7 +513,7 @@ export default function OyuncuForm({
                 />
               </div>
 
-              {/* Row 4: Diğer Belgeler (full width, optional) */}
+              {/* Row 4: Diğer Belgeler */}
               <FileUploadField
                 label="Diğer Belgeler"
                 fieldName="other_document"
@@ -435,12 +528,12 @@ export default function OyuncuForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-12 bg-[#f0a500] text-[#0d1f12] font-bold rounded-xl hover:bg-[#f0a500]/90 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="w-full h-12 bg-[#f0a500] text-[#0d1f12] font-bold rounded-xl hover:bg-[#f0a500]/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
-                <span>Gönderiliyor...</span>
+                Gönderiliyor...
               </>
             ) : (
               'Başvuruyu Gönder'
@@ -448,7 +541,7 @@ export default function OyuncuForm({
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -472,7 +565,12 @@ function FileUploadField({
   return (
     <div>
       <label className="block text-sm text-gray-300 mb-2">
-        {label} {required ? <span className="text-red-400">*</span> : <span className="text-gray-500">(opsiyonel)</span>}
+        {label}{' '}
+        {required ? (
+          <span className="text-red-400">*</span>
+        ) : (
+          <span className="text-gray-500">(opsiyonel)</span>
+        )}
       </label>
       <div
         onClick={() => inputRef.current?.click()}
@@ -482,13 +580,15 @@ function FileUploadField({
           <FileText size={20} className="text-[#f0a500] shrink-0" />
           <div className="min-w-0">
             <p className="text-sm font-medium text-white">{label}</p>
-            <p className="text-xs text-gray-500">PDF, JPG veya PNG — maks. 5 MB<br />(Dosya adında Türkçe karakter ve boşluk olmamasına dikkat edin)</p>
+            <p className="text-xs text-gray-500">PDF, JPG veya PNG — maks. 5 MB</p>
           </div>
         </div>
         {fileName ? (
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-green-400">✓</span>
-            <span className="text-xs text-green-400 max-w-20 truncate">{fileName}</span>
+            <span className="text-xs text-green-400 max-w-20 truncate">
+              {fileName}
+            </span>
           </div>
         ) : (
           <button
