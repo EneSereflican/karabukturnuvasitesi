@@ -15,8 +15,6 @@ import {
   Calendar,
   RefreshCw,
   UserX,
-  Building2,
-  User,
   File,
   ChevronLeft,
   Palette,
@@ -101,9 +99,11 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const documentsData = documentsDataRaw ?? [];
 
   const totalMembers = 1 + playersData.length;
-  const captainDocuments = documentsData.filter(
-    (d) => d.owner_type === 'captain' && d.owner_id === captainData.id
-  );
+  const captainDocuments = captainData
+    ? documentsData.filter(
+        (d) => d.owner_type === 'captain' && d.owner_id === captainData.id
+      )
+    : [];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
