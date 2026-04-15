@@ -46,7 +46,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
+      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.75), rgba(13, 31, 18, 0.85)), url(/foto-taraftarlar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
         <div className="text-center space-y-8 max-w-4xl">
           <div style={{
             display: 'inline-block',
@@ -175,71 +175,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="py-16 px-4 bg-[#0d1f12]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <div
-              style={{
-                display: 'inline-block',
-                backgroundColor: 'rgba(240, 165, 0, 0.2)',
-                color: '#f0a500',
-                fontSize: '14px',
-                padding: '4px 12px',
-                borderRadius: '999px',
-                marginBottom: '16px',
-              }}
-            >
-              Önceki Turnuvalardan
-            </div>
-            <h2 className="text-3xl font-bold text-white">Anlar ve Anılar</h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Photo 1 - Trophies */}
-            <div
-              style={{
-                backgroundColor: '#1a2e1d',
-                borderColor: '#2d4a32',
-              }}
-              className="border rounded-2xl overflow-hidden"
-            >
-              <img
-                src="/foto-kupalar.jpg"
-                className="w-full h-72 object-cover"
-                alt="Turnuva kupaları"
-              />
-              <div className="p-4">
-                <p className="text-white font-semibold">Şampiyonluk Kupaları</p>
-                <p className="text-gray-400 text-sm mt-1">
-                  Önceki turnuvalardan kazananlarımız
-                </p>
-              </div>
-            </div>
-
-            {/* Photo 2 - Atmosphere */}
-            <div
-              style={{
-                backgroundColor: '#1a2e1d',
-                borderColor: '#2d4a32',
-              }}
-              className="border rounded-2xl overflow-hidden"
-            >
-              <img
-                src="/foto-taraftarlar.jpg"
-                className="w-full h-72 object-cover"
-                alt="Turnuva atmosferi"
-              />
-              <div className="p-4">
-                <p className="text-white font-semibold">Turnuva Atmosferi</p>
-                <p className="text-gray-400 text-sm mt-1">
-                  Her maçın kendine has bir hikayesi var
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* How It Works Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#1a2e1d]">
@@ -297,7 +233,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ background: 'linear-gradient(135deg, #1a472a 0%, #0d1f12 100%)' }}>
+      <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.80), rgba(13, 31, 18, 0.80)), url(/foto-kupalar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white">
             Hemen Başvurun
