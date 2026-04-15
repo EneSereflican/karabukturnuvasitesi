@@ -217,11 +217,18 @@ export default async function BasvuruDurumlariPage({
 
                     {/* Red Notu */}
                     {team.status === 'rejected' && (
-                      <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 mt-4 flex items-start gap-3">
-                        <AlertCircle size={16} className="text-red-400 mt-0.5 shrink-0" />
-                        <p className="text-red-400 text-sm">
-                          Başvuru reddedilmiştir. Detaylar için takım sorumlusuna ulaşın.
-                        </p>
+                      <div className="mt-4 space-y-3">
+                        <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 flex items-start gap-3">
+                          <AlertCircle size={16} className="text-red-400 mt-0.5 shrink-0" />
+                          <p className="text-red-400 text-sm">
+                            Başvuru reddedilmiştir. Detaylar için takım sorumlusuna ulaşın.
+                          </p>
+                        </div>
+                        <Link href="/belge-guncelle">
+                          <button className="bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg px-3 py-1.5 text-sm hover:bg-red-500/30 transition-colors">
+                            Belge Güncelle →
+                          </button>
+                        </Link>
                       </div>
                     )}
                   </div>

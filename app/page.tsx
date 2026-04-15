@@ -186,18 +186,18 @@ export default function Home() {
             {[
               {
                 step: 1,
-                title: 'Kaptan Kaydolur',
-                desc: 'Takım sorumlusu bilgilerini ve belgelerini sisteme girer.'
+                title: 'Takım Oluştur',
+                desc: 'Takım sorumlusu kurum ve takım bilgilerini girer, sistem otomatik takım anahtarı oluşturur.'
               },
               {
                 step: 2,
-                title: 'Davet Linki Oluşur',
-                desc: 'Sisteme kayıt sonrası otomatik davet linki üretilir.'
+                title: 'Anahtarı Paylaş',
+                desc: 'Takım sorumlusu oluşan anahtarı takım üyelerine iletir.'
               },
               {
                 step: 3,
-                title: 'Oyuncular Katılır',
-                desc: 'Oyuncular davet linki ile belgelerini yükler.'
+                title: 'Oyuncular Kaydolur',
+                desc: 'Oyuncular takım anahtarını kullanarak belgelerini yükler ve kayıt oluşturur.'
               },
               {
                 step: 4,
