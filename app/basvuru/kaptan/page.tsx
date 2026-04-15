@@ -9,6 +9,8 @@ import {
   AlertTriangle,
   XCircle,
   Loader2,
+  Info,
+  AlertCircle,
 } from 'lucide-react';
 
 export default function CaptainRegistrationPage() {
@@ -165,6 +167,47 @@ export default function CaptainRegistrationPage() {
             <p className="text-sm">{error}</p>
           </div>
         )}
+
+        {/* Information Box */}
+        <div
+          style={{
+            backgroundColor: '#0d1f12',
+            borderColor: '#2d4a32',
+          }}
+          className="border rounded-xl p-5 mb-6 space-y-3"
+        >
+          {/* Info Item 1 */}
+          <div className="flex items-start gap-3">
+            <Info size={16} className="text-blue-400 shrink-0 mt-0.5" />
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Takımınızı oluşturarak takım sorumlusu sıfatını üstlenmiş
+              olursunuz. Takım sorumlusu aynı zamanda takımda oyuncu olarak da
+              yer alabilir; bunun için takım anahtarı ile normal oyuncu kaydı
+              oluşturmanız yeterlidir.
+            </p>
+          </div>
+
+          {/* Info Item 2 */}
+          <div className="flex items-start gap-3">
+            <AlertTriangle size={16} className="text-yellow-400 shrink-0 mt-0.5" />
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Kurumunuzda daha önce takım oluşturulmuş olabilir. Yeni bir takım
+              oluşturmadan önce kurumunuzdaki kişilerle iletişime geçerek
+              mevcut bir takım olup olmadığını teyit edin.
+            </p>
+          </div>
+
+          {/* Info Item 3 */}
+          <div className="flex items-start gap-3">
+            <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Takım oluşturulduktan sonra size verilen anahtarı kesinlikle
+              kaybetmeyin. Bu anahtar, takım üyelerinizin sisteme kayıt
+              olabilmesi için zorunludur. Anahtar kaybolması durumunda yönetici
+              ile iletişime geçmeniz gerekecektir.
+            </p>
+          </div>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
