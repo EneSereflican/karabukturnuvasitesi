@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminToken } from '@/lib/admin-auth';
+import { createServiceClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password } = body;
+    const text = await request.text();
+    if (!text) {
+      return NextResponse.json({ error: 'Body boş' }, { status: 400 });
+    }
+    const { email, password } = JSON.parse(text);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -14,17 +19,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const supabase = createServiceClient();
 
-    if (email !== adminEmail || password !== adminPassword) {
+    const { data: admin, error } = await supabase
+      .from('admins')
+      .select('id, email, password_hash, name')
+      .eq('email', email)
+      .single();
+
+    if (error || !admin) {
       return NextResponse.json(
         { error: 'Geçersiz e-posta veya şifre' },
         { status: 401 }
       );
     }
 
-    const token = await createAdminToken({ id: 'admin', email });
+    const valid = await bcrypt.compare(password, admin.password_hash);
+    if (!valid) {
+      return NextResponse.json(
+        { error: 'Geçersiz e-posta veya şifre' },
+        { status: 401 }
+      );
+    }
+
+    const token = await createAdminToken({ id: admin.id, email: admin.email });
 
     const cookieStore = await cookies();
     cookieStore.set('admin_token', token, {
@@ -35,7 +53,10 @@ export async function POST(request: NextRequest) {
       path: '/',
     });
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json(
+      { success: true, name: admin.name },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
