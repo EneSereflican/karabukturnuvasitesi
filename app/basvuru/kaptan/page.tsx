@@ -20,6 +20,14 @@ export default function CaptainRegistrationPage() {
     jersey_color: '',
   });
 
+  const [responsible1Name, setResponsible1Name] = useState('');
+  const [responsible1Phone, setResponsible1Phone] = useState('');
+  const [responsible1Email, setResponsible1Email] = useState('');
+  const [hasSecondResponsible, setHasSecondResponsible] = useState(false);
+  const [responsible2Name, setResponsible2Name] = useState('');
+  const [responsible2Phone, setResponsible2Phone] = useState('');
+  const [responsible2Email, setResponsible2Email] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -43,7 +51,15 @@ export default function CaptainRegistrationPage() {
       const response = await fetch('/api/kaptan-basvuru', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          responsible1_name: responsible1Name,
+          responsible1_phone: responsible1Phone,
+          responsible1_email: responsible1Email,
+          responsible2_name: hasSecondResponsible ? responsible2Name : '',
+          responsible2_phone: hasSecondResponsible ? responsible2Phone : '',
+          responsible2_email: hasSecondResponsible ? responsible2Email : '',
+        }),
       });
 
       const data = await response.json();
@@ -171,6 +187,20 @@ export default function CaptainRegistrationPage() {
         {/* Information Box */}
         <div
           style={{
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderColor: 'rgba(59, 130, 246, 0.3)',
+          }}
+          className="border rounded-xl p-4 mb-6 flex items-start gap-3"
+        >
+          <Info size={18} className="text-blue-400 mt-0.5 shrink-0" />
+          <p className="text-blue-200 text-sm leading-relaxed">
+            Takım sorumlusu olarak takımı siz oluşturuyorsunuz. Eğer takımda oyuncu olarak da oynamak istiyorsanız, takım oluşturulduktan sonra size verilen anahtar ile normal oyuncu kaydı oluşturmanız gerekmektedir. Takım sorumlusu olmak oyuncu kontenjanı tüketmez.
+          </p>
+        </div>
+
+        {/* Information Box */}
+        <div
+          style={{
             backgroundColor: '#0d1f12',
             borderColor: '#2d4a32',
           }}
@@ -258,6 +288,137 @@ export default function CaptainRegistrationPage() {
               className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
             />
           </div>
+
+          {/* Birinci Sorumlu Bilgileri */}
+          <div className="mt-8 pt-6 border-t border-[#2d4a32]">
+            <div className="mb-6 flex items-start gap-3 border-l-4 border-[#f0a500] pl-3">
+              <div>
+                <h3 className="text-white font-semibold">Birinci Sorumlu Bilgileri</h3>
+                <p className="text-gray-400 text-sm mt-1">Zorunludur</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* Ad Soyad */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Ad Soyad
+                </label>
+                <input
+                  type="text"
+                  value={responsible1Name}
+                  onChange={(e) => setResponsible1Name(e.target.value)}
+                  placeholder="Adınız Soyadınız"
+                  required
+                  className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+                />
+              </div>
+
+              {/* Telefon */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Telefon
+                </label>
+                <input
+                  type="tel"
+                  value={responsible1Phone}
+                  onChange={(e) => setResponsible1Phone(e.target.value)}
+                  placeholder="5XX XXX XX XX"
+                  required
+                  className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* E-posta */}
+            <div>
+              <label className="block text-gray-300 text-sm font-medium mb-2">
+                E-posta
+              </label>
+              <input
+                type="email"
+                value={responsible1Email}
+                onChange={(e) => setResponsible1Email(e.target.value)}
+                placeholder="eposta@example.com"
+                required
+                className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* İkinci Sorumlu Checkbox */}
+          <div className="mt-8 pt-6 border-t border-[#2d4a32]">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hasSecondResponsible}
+                onChange={(e) => setHasSecondResponsible(e.target.checked)}
+                style={{
+                  accentColor: '#f0a500',
+                }}
+                className="w-5 h-5 cursor-pointer"
+              />
+              <span className="text-gray-300 text-sm font-medium">
+                İkinci takım sorumlusu eklenecek mi?
+              </span>
+            </label>
+          </div>
+
+          {/* İkinci Sorumlu Bilgileri (Conditional) */}
+          {hasSecondResponsible && (
+            <div className="mt-6">
+              <div className="mb-6 flex items-start gap-3 border-l-4 border-[#f0a500] pl-3">
+                <div>
+                  <h3 className="text-white font-semibold">İkinci Sorumlu Bilgileri</h3>
+                  <p className="text-gray-400 text-sm mt-1">Opsiyonel</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {/* Ad Soyad */}
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Ad Soyad
+                  </label>
+                  <input
+                    type="text"
+                    value={responsible2Name}
+                    onChange={(e) => setResponsible2Name(e.target.value)}
+                    placeholder="Adınız Soyadınız"
+                    className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+                  />
+                </div>
+
+                {/* Telefon */}
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Telefon
+                  </label>
+                  <input
+                    type="tel"
+                    value={responsible2Phone}
+                    onChange={(e) => setResponsible2Phone(e.target.value)}
+                    placeholder="5XX XXX XX XX"
+                    className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* E-posta */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  E-posta
+                </label>
+                <input
+                  type="email"
+                  value={responsible2Email}
+                  onChange={(e) => setResponsible2Email(e.target.value)}
+                  placeholder="eposta@example.com"
+                  className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-11 w-full px-4 placeholder-gray-500 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Submit Button */}
           <button

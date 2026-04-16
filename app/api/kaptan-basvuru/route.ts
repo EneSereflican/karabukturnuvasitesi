@@ -5,7 +5,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { team_name, institution, jersey_color } = body;
+    const { 
+      team_name, 
+      institution, 
+      jersey_color,
+      responsible1_name,
+      responsible1_phone,
+      responsible1_email,
+      responsible2_name,
+      responsible2_phone,
+      responsible2_email
+    } = body;
 
     // Validate required fields
     if (!team_name || !institution) {
@@ -31,6 +41,12 @@ export async function POST(request: NextRequest) {
       jersey_color: jersey_color || null,
       team_key,
       status: 'pending',
+      responsible1_name: responsible1_name || null,
+      responsible1_phone: responsible1_phone || null,
+      responsible1_email: responsible1_email || null,
+      responsible2_name: responsible2_name || null,
+      responsible2_phone: responsible2_phone || null,
+      responsible2_email: responsible2_email || null,
     });
 
     if (error) {
