@@ -57,7 +57,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const { data: teamData, error: teamError } = await supabase
     .from('teams')
     .select(
-      'id, name, institution, team_key, jersey_color, status, rejection_note, rejected_player_ids, update_count, created_at'
+      'id, name, institution, team_key, jersey_color, status, rejection_note, rejected_player_ids, update_count, created_at, responsible1_name, responsible1_phone, responsible1_email, responsible2_name, responsible2_phone, responsible2_email'
     )
     .eq('id', id)
     .single();
@@ -98,7 +98,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
 
   const documentsData = documentsDataRaw ?? [];
 
-  const totalMembers = 1 + playersData.length;
+  const totalMembers = playersData.length;
   const captainDocuments = captainData
     ? documentsData.filter(
         (d) => d.owner_type === 'captain' && d.owner_id === captainData.id
@@ -225,21 +225,6 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
               {formatDate(teamData.created_at)}
             </p>
             <p className="text-gray-400 text-xs mt-1">Başvuru Tarihi</p>
-          </div>
-
-          {/* Remaining Updates */}
-          <div
-            style={{
-              backgroundColor: '#1a2e1d',
-              borderColor: '#2d4a32',
-            }}
-            className="border rounded-xl p-4"
-          >
-            <RefreshCw size={18} style={{ color: '#f0a500' }} />
-            <p style={{ color: 'white' }} className="text-xl font-bold mt-1">
-              {2 - teamData.update_count}/2
-            </p>
-            <p className="text-gray-400 text-xs mt-1">Kalan Güncelleme</p>
           </div>
         </div>
 
@@ -392,6 +377,69 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
             </p>
           </div>
         )}
+
+        {/* Takım Sorumluları Card */}
+        <div
+          style={{
+            backgroundColor: '#1a2e1d',
+            borderColor: '#2d4a32',
+          }}
+          className="border rounded-2xl p-6 mb-6"
+        >
+          {/* Card Header */}
+          <div className="flex items-center gap-2 mb-4">
+            <Shield size={20} style={{ color: '#f0a500' }} />
+            <h2 className="text-white font-semibold text-lg">Takım Sorumluları</h2>
+          </div>
+
+          {/* Birinci Sorumlu */}
+          {teamData.responsible1_name ? (
+            <div className="mb-6">
+              <p className="text-gray-400 text-xs mb-3 font-medium">Birinci Sorumlu</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
+                  <p className="text-white font-medium">{teamData.responsible1_name}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Telefon</p>
+                  <p className="text-white font-medium">{teamData.responsible1_phone}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">E-posta</p>
+                  <p className="text-white font-medium text-sm break-all">{teamData.responsible1_email}</p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* İkinci Sorumlu */}
+          {teamData.responsible2_name ? (
+            <div>
+              {teamData.responsible1_name && <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />}
+              <p className="text-gray-400 text-xs mb-3 font-medium">İkinci Sorumlu</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
+                  <p className="text-white font-medium">{teamData.responsible2_name}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Telefon</p>
+                  <p className="text-white font-medium">{teamData.responsible2_phone}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">E-posta</p>
+                  <p className="text-white font-medium text-sm break-all">{teamData.responsible2_email}</p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* No Responsibles Message */}
+          {!teamData.responsible1_name && !teamData.responsible2_name && (
+            <p className="text-gray-400 text-sm">Takım sorumlusu bilgisi girilmemiştir.</p>
+          )}
+        </div>
 
         {/* Players List */}
         {playersData.length > 0 ? (
