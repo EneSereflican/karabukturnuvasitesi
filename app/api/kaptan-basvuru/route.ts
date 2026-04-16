@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 
-function sanitizeFileName(fileName: string): string {
-  return fileName
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9.-]/g, '_')
-    .replace(/_{2,}/g, '_');
-}
-
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -26,7 +15,6 @@ export async function POST(request: NextRequest) {
     const responsible2_name = formData.get('responsible2_name') as string | null;
     const responsible2_phone = formData.get('responsible2_phone') as string | null;
     const responsible2_email = formData.get('responsible2_email') as string | null;
-    const bankReceiptFile = formData.get('bank_receipt') as File | null;
 
     // Validate required fields
     if (!team_name || !institution) {
@@ -73,66 +61,6 @@ export async function POST(request: NextRequest) {
     }
 
     const team_id = teamData.id;
-
-    // Upload file to storage if provided
-    if (bankReceiptFile && bankReceiptFile.size > 0) {
-      // Validate file MIME type
-      if (!ALLOWED_MIME_TYPES.includes(bankReceiptFile.type)) {
-        return NextResponse.json(
-          { error: 'Geçersiz dosya formatı veya boyutu' },
-          { status: 400 }
-        );
-      }
-
-      // Validate file size
-      if (bankReceiptFile.size > MAX_FILE_SIZE) {
-        return NextResponse.json(
-          { error: 'Geçersiz dosya formatı veya boyutu' },
-          { status: 400 }
-        );
-      }
-
-      const timestamp = Date.now();
-      const sanitizedFileName = sanitizeFileName(bankReceiptFile.name);
-      const filePath = `teams/${team_id}/receipts/${timestamp}-${sanitizedFileName}`;
-
-      const arrayBuffer = await bankReceiptFile.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, uint8Array, {
-          contentType: bankReceiptFile.type,
-        });
-
-      if (uploadError) {
-        console.error('Storage upload error:', uploadError);
-        return NextResponse.json(
-          { error: 'Dosya yüklenirken hata oluştu' },
-          { status: 500 }
-        );
-      }
-
-      // Insert into documents table
-      const { error: docError } = await supabase.from('documents').insert({
-        owner_type: 'team',
-        owner_id: team_id,
-        team_id,
-        document_type: 'bank_receipt',
-        file_path: filePath,
-        file_name: bankReceiptFile.name,
-        file_size: bankReceiptFile.size,
-        mime_type: bankReceiptFile.type,
-      });
-
-      if (docError) {
-        console.error('Document insert error:', docError);
-        return NextResponse.json(
-          { error: 'Belge kaydı oluşturulurken hata oluştu' },
-          { status: 500 }
-        );
-      }
-    }
 
     return NextResponse.json({ success: true, team_key }, { status: 200 });
   } catch (error) {
