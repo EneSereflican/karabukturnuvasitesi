@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lock } from 'lucide-react';
+import { Lock, Calendar, Trophy, Play, Shield, BarChart2, Bell } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -255,6 +255,118 @@ export default function Home() {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* YAKINDA Section */}
+      <section className="bg-[#0d1f12] py-20 px-4">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <span className="inline-block bg-[#f0a500]/20 text-[#f0a500] text-xs font-bold px-4 py-2 rounded-full tracking-widest uppercase">
+            Yakında
+          </span>
+          <h2 className="text-white text-4xl font-bold mt-4">
+            Turnuva deneyimini<br />
+            <span className="text-[#f0a500]">bir üst seviyeye taşıyoruz</span>
+          </h2>
+          <p className="text-gray-400 text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
+            Turnuva sürecinde tüm gelişmeleri anlık olarak takip edebileceksiniz.
+          </p>
+        </div>
+
+        {/* Features Grid */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {/* Card 1: Fikstür */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <Calendar size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">Fikstür & Maç Takvimi</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Tüm maçların tarih, saat ve lokasyon bilgilerini anlık takip edin.
+            </p>
+          </div>
+
+          {/* Card 2: Canlı Puan */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <Trophy size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">Canlı Puan Tablosu</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Gruplar ve eleme aşamalarını, takım sıralamalarını gerçek zamanlı görün.
+            </p>
+          </div>
+
+          {/* Card 3: Gol Videoları */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <Play size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">En İyi Goller</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Turnuvanın unutulmaz gollerini izleyin, paylaşın ve oylamaya katılın.
+            </p>
+          </div>
+
+          {/* Card 4: Kurtarışlar */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <Shield size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">En İyi Kurtarışlar</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Kalecilerin inanılmaz kurtarışları video arşivinde sizinle.
+            </p>
+          </div>
+
+          {/* Card 5: İstatistikler */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <BarChart2 size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">Oyuncu İstatistikleri</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Gol krallığı, asist sıralaması, sarı-kırmızı kart tabloları.
+            </p>
+          </div>
+
+          {/* Card 6: Bildirimler */}
+          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
+            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
+              Yakında
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+              <Bell size={24} className="text-[#f0a500]" />
+            </div>
+            <h3 className="text-white font-bold text-lg">Anlık Bildirimler</h3>
+            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+              Maç sonuçları ve önemli gelişmelerden anında haberdar olun.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Message */}
+        <div className="text-center mt-12">
+          <div className="w-24 h-1 bg-[#f0a500] mx-auto rounded mb-6"></div>
+          <p className="text-gray-400 text-sm">
+            Bu özellikler turnuva başladığında aktif hale gelecektir.
+          </p>
         </div>
       </section>
 
