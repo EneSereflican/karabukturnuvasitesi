@@ -181,9 +181,9 @@ export default function CaptainRegistrationPage() {
         {/* Header */}
         <Link
           href="/"
-          className="text-gray-400 hover:text-white text-sm transition-colors inline-block mb-4"
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm mb-6"
         >
-          ← Ana Sayfa
+          ← Ana Sayfaya Dön
         </Link>
 
         <div className="mb-6">

@@ -316,6 +316,14 @@ export default function PlayerApplicationPage() {
           </div>
         )}
 
+        {/* Back Link */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm mb-6"
+        >
+          ← Ana Sayfaya Dön
+        </Link>
+
         {/* Form */}
         <form onSubmit={handleFormSubmit} className="space-y-8">
           {/* SECTION 1: Kişisel Bilgiler */}

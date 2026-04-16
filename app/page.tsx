@@ -9,15 +9,17 @@ export default function Home() {
       {/* Navbar */}
       <nav className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[#1a472a]" style={{ backgroundColor: 'rgba(13, 31, 18, 0.8)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-white">
-              <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2" />
-              <circle cx="16" cy="16" r="4" fill="currentColor" />
-              <path d="M16 2 L16 8 M16 24 L16 30" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M2 16 L8 16 M24 16 L30 16" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-            <h1 className="text-xl font-bold hidden sm:block">Karabük Turnuvası</h1>
-          </div>
+          <Link href="/">
+            <div className="flex items-center gap-3 cursor-pointer">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-white">
+                <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2" />
+                <circle cx="16" cy="16" r="4" fill="currentColor" />
+                <path d="M16 2 L16 8 M16 24 L16 30" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M2 16 L8 16 M24 16 L30 16" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+              <h1 className="text-xl font-bold hidden sm:block">Karabük Turnuvası</h1>
+            </div>
+          </Link>
 
           <div className="flex gap-3 items-center">
             <Link href="/admin/giris">
