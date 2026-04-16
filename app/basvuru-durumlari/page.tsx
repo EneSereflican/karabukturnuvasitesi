@@ -41,8 +41,9 @@ export default async function BasvuruDurumlariPage({
     teams.map(async (team) => {
       const { data: playersData } = await supabase
         .from('players')
-        .select('id, first_name, last_name')
-        .eq('team_id', team.id);
+        .select('id, first_name, last_name, jersey_number')
+        .eq('team_id', team.id)
+        .order('jersey_number', { ascending: true });
 
       const totalMembers = playersData?.length ?? 0;
 
@@ -269,6 +270,40 @@ export default async function BasvuruDurumlariPage({
                     {team.status !== 'approved' && (
                       <DekontYukle teamKey={team.team_key} hasReceipt={team.hasReceipt} />
                     )}
+
+                    {/* Kayıtlı Oyuncular Bölümü */}
+                    <div className="border-t border-[#2d4a32] mt-4 pt-4">
+                      <div className="flex justify-between items-center mb-3">
+                        <p className="text-gray-400 text-xs font-medium">Kayıtlı Oyuncular</p>
+                        <p className="text-gray-400 text-xs">{team.players.length}/15</p>
+                      </div>
+
+                      {team.players.length === 0 ? (
+                        <div className="bg-[#0d1f12] rounded-lg p-3 text-center">
+                          <p className="text-gray-400 text-xs">Henüz oyuncu kaydı bulunmamaktadır.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-0">
+                          {team.players.slice(0, 15).map((player, index) => (
+                            <div
+                              key={player.id}
+                              className={`flex items-center gap-3 py-1.5 ${
+                                index < team.players.length - 1
+                                  ? 'border-b border-[#2d4a32]/50'
+                                  : ''
+                              }`}
+                            >
+                              <div className="w-7 h-7 rounded-full bg-[#f0a500]/10 border border-[#f0a500]/30 text-[#f0a500] text-xs font-bold flex items-center justify-center shrink-0">
+                                {player.jersey_number || '-'}
+                              </div>
+                              <p className="text-white text-sm">
+                                {player.first_name} {player.last_name}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
