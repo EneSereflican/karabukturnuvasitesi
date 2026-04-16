@@ -13,17 +13,20 @@ interface AdminKararProps {
   teamId: string;
   currentStatus: string;
   totalMembers: number;
+  players: { id: string; first_name: string; last_name: string }[];
 }
 
 export default function AdminKarar({
   teamId,
   currentStatus,
   totalMembers,
+  players,
 }: AdminKararProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [rejectionNote, setRejectionNote] = useState('');
+  const [rejectedPlayerIds, setRejectedPlayerIds] = useState<string[]>([]);
 
   const canApprove = totalMembers >= 10;
   const isApproved = currentStatus === 'approved';
@@ -75,6 +78,7 @@ export default function AdminKarar({
           teamId,
           action: 'reject',
           rejectionNote,
+          rejectedPlayerIds,
         }),
       });
 
@@ -235,6 +239,50 @@ export default function AdminKarar({
             }}
             className="border rounded-xl p-4"
           >
+            {/* Sorunlu Oyuncular Section */}
+            <div className="mb-6">
+              <label className="text-red-400 text-xs font-medium block mb-2">
+                Sorunlu Oyuncular (opsiyonel)
+              </label>
+              <p className="text-gray-400 text-xs mb-3">
+                Belgeleri eksik veya hatalı olan oyuncuları seçin.
+              </p>
+
+              <div className="space-y-2">
+                {players.map((player) => (
+                  <label
+                    key={player.id}
+                    style={{
+                      backgroundColor: '#0d1f12',
+                      borderColor: '#2d4a32',
+                    }}
+                    className="border rounded-lg p-2 flex items-center gap-3 cursor-pointer hover:border-[#f0a500]/30 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={rejectedPlayerIds.includes(player.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setRejectedPlayerIds([...rejectedPlayerIds, player.id]);
+                        } else {
+                          setRejectedPlayerIds(
+                            rejectedPlayerIds.filter((id) => id !== player.id)
+                          );
+                        }
+                      }}
+                      style={{
+                        accentColor: '#f0a500',
+                      }}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-white text-sm">
+                      {player.first_name} {player.last_name}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
             <label className="text-red-400 text-sm font-medium block mb-2">
               Red Gerekçesi
             </label>
@@ -278,6 +326,7 @@ export default function AdminKarar({
               onClick={() => {
                 setShowRejectForm(false);
                 setRejectionNote('');
+                setRejectedPlayerIds([]);
                 setError(null);
               }}
               disabled={loading}

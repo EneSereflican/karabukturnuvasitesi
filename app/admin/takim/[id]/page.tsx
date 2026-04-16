@@ -57,7 +57,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const { data: teamData, error: teamError } = await supabase
     .from('teams')
     .select(
-      'id, name, institution, team_key, jersey_color, status, rejection_note, update_count, created_at'
+      'id, name, institution, team_key, jersey_color, status, rejection_note, rejected_player_ids, update_count, created_at'
     )
     .eq('id', id)
     .single();
@@ -451,6 +451,11 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
           teamId={teamData.id}
           currentStatus={teamData.status}
           totalMembers={totalMembers}
+          players={playersData.map((p) => ({
+            id: p.id,
+            first_name: p.first_name,
+            last_name: p.last_name,
+          }))}
         />
       </div>
     </div>

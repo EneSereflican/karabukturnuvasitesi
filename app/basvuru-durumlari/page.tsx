@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { createServiceClient } from '@/lib/supabase/server';
 import BasvuruFilter from '@/components/BasvuruFilter';
-import { Building2, User, AlertCircle, Info } from 'lucide-react';
+import { Building2, User } from 'lucide-react';
 
 interface BasvuruDurumlariPageProps {
   searchParams: Promise<{
@@ -20,7 +20,7 @@ export default async function BasvuruDurumlariPage({
   // Fetch all teams
   const { data: teamsData, error: teamsError } = await supabase
     .from('teams')
-    .select('id, name, institution, status, created_at')
+    .select('id, name, institution, status, rejection_note, rejected_player_ids, created_at')
     .order('created_at', { ascending: true });
 
   if (teamsError) {
@@ -40,7 +40,7 @@ export default async function BasvuruDurumlariPage({
     teams.map(async (team) => {
       const { data: playersData } = await supabase
         .from('players')
-        .select('id')
+        .select('id, first_name, last_name')
         .eq('team_id', team.id);
 
       const totalMembers = 1 + (playersData?.length ?? 0);
@@ -48,6 +48,7 @@ export default async function BasvuruDurumlariPage({
       return {
         ...team,
         totalMembers,
+        players: playersData ?? [],
       };
     })
   );
@@ -218,12 +219,30 @@ export default async function BasvuruDurumlariPage({
                     {/* Red Notu */}
                     {team.status === 'rejected' && (
                       <div className="mt-4 space-y-3">
-                        <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 flex items-start gap-3">
-                          <AlertCircle size={16} className="text-red-400 mt-0.5 shrink-0" />
-                          <p className="text-red-400 text-sm">
-                            Başvuru reddedilmiştir. Detaylar için takım sorumlusuna ulaşın.
-                          </p>
-                        </div>
+                        {team.rejection_note && (
+                          <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
+                            <p className="text-red-400 text-xs font-medium">Red Gerekçesi:</p>
+                            <p className="text-red-300 text-sm mt-1">{team.rejection_note}</p>
+                          </div>
+                        )}
+
+                        {team.rejected_player_ids && team.rejected_player_ids.length > 0 && (
+                          <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
+                            <p className="text-red-400 text-xs font-medium">Sorunlu Oyuncular:</p>
+                            <div className="mt-2 space-y-1">
+                              {team.rejected_player_ids.map((playerId) => {
+                                const player = team.players.find((p) => p.id === playerId);
+                                if (!player) return null;
+                                return (
+                                  <p key={playerId} className="text-red-300 text-sm">
+                                    • {player.first_name} {player.last_name}
+                                  </p>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
                         <Link href="/belge-guncelle">
                           <button className="bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg px-3 py-1.5 text-sm hover:bg-red-500/30 transition-colors">
                             Belge Güncelle →
@@ -238,14 +257,7 @@ export default async function BasvuruDurumlariPage({
           </div>
         )}
 
-        {/* 5) ALT BİLGİ NOTU */}
-        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-4 mt-8 flex items-center gap-3">
-          <Info size={16} className="text-[#f0a500] shrink-0" />
-          <p className="text-gray-400 text-sm">
-            Başvurunuzun durumunu takip etmek için kayıt sırasında e-posta adresinize gönderilen takip linkini
-            kullanın.
-          </p>
-        </div>
+
       </div>
     </div>
   );

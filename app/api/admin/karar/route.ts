@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { teamId, action, rejectionNote } = body;
+    const { teamId, action, rejectionNote, rejectedPlayerIds } = body;
 
     const supabase = createServiceClient();
 
@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
         .update({
           status: 'rejected',
           rejection_note: rejectionNote,
+          rejected_player_ids: rejectedPlayerIds || [],
         })
         .eq('id', teamId);
 
