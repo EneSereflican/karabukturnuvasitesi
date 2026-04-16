@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createServiceClient } from '@/lib/supabase/server';
 import PlayerCard from '@/components/PlayerCard';
 import AdminKarar from '@/components/AdminKarar';
+import TakimSil from '@/components/TakimSil';
 import BelgeButonlari from '@/components/BelgeButonlari';
 import TeamKeyDisplay from '@/components/TeamKeyDisplay';
 import {
@@ -364,6 +365,9 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
             last_name: p.last_name,
           }))}
         />
+
+        {/* Delete Team Button */}
+        <TakimSil teamId={teamData.id} teamName={teamData.name} />
       </div>
     </div>
   );
