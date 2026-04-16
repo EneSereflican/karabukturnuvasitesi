@@ -407,7 +407,10 @@ export default function PlayerApplicationPage() {
             {/* TC Kimlik No */}
             <div>
               <label className="block text-sm text-gray-300 mb-2">
-                TC Kimlik No
+                TC Kimlik No{' '}
+                <span className="text-gray-500 text-xs font-normal">
+                  (opsiyonel)
+                </span>
               </label>
               <input
                 type="text"

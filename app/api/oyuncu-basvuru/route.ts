@@ -39,7 +39,6 @@ export async function POST(request: NextRequest) {
     const requiredFields = [
       'first_name',
       'last_name',
-      'tc_no',
       'phone',
       'email',
       'institution',
