@@ -21,7 +21,7 @@ export default async function BasvuruDurumlariPage({
   // Fetch all teams
   const { data: teamsData, error: teamsError } = await supabase
     .from('teams')
-    .select('id, name, institution, status, rejection_note, rejected_player_ids, created_at')
+    .select('id, name, institution, status, rejection_note, rejected_player_ids, created_at, team_key')
     .order('created_at', { ascending: true });
 
   if (teamsError) {
