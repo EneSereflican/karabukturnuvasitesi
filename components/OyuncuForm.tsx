@@ -382,6 +382,16 @@ export default function OyuncuForm({
                 />
               </div>
 
+              {/* Info Box */}
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mt-2 mb-4 flex items-start gap-3">
+                <Info size={16} className="text-blue-400 mt-0.5 shrink-0" />
+                <p className="text-blue-200 text-xs leading-relaxed">
+                  • İş yerinize ait iş yeri kimlik kartınız varsa TC kimlik belgesi yerine onu da yükleyebilirsiniz.<br/>
+                  • Kimlik bilgilerinizi paylaşmak istemiyorsanız yönetici ile iletişime geçerek bu durumu belirtebilirsiniz.<br/>
+                  • Farklı bir belge yüklemek istiyorsanız lütfen önce yöneticiye bildiriniz.
+                </p>
+              </div>
+
               {/* Row 2: Çalışma Belgesi - SGK */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FileUploadField
