@@ -230,7 +230,7 @@ export default async function BasvuruDurumlariPage({
                           <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
                             <p className="text-red-400 text-xs font-medium">Sorunlu Oyuncular:</p>
                             <div className="mt-2 space-y-1">
-                              {team.rejected_player_ids.map((playerId) => {
+                              {team.rejected_player_ids.map((playerId: string) => {
                                 const player = team.players.find((p) => p.id === playerId);
                                 if (!player) return null;
                                 return (
