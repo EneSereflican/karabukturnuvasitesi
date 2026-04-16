@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
         for (const oldDoc of oldDocs) {
           // Delete from storage
           await supabase.storage
-            .from('team-documents')
+            .from('documents')
             .remove([oldDoc.file_path]);
 
           // Delete from database
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
       const buffer = await file.arrayBuffer();
 
       const { error: uploadError } = await supabase.storage
-        .from('team-documents')
+        .from('documents')
         .upload(filePath, buffer, {
           contentType: file.type,
           upsert: false,
