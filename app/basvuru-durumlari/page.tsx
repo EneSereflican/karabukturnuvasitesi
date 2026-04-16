@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createServiceClient } from '@/lib/supabase/server';
 import BasvuruFilter from '@/components/BasvuruFilter';
+import DekontYukle from '@/components/DekontYukle';
 import { Building2, User } from 'lucide-react';
 
 interface BasvuruDurumlariPageProps {
@@ -35,7 +36,7 @@ export default async function BasvuruDurumlariPage({
 
   const teams = teamsData || [];
 
-  // Fetch player counts for each team
+  // Fetch player counts and receipt data for each team
   const teamsWithMembers = await Promise.all(
     teams.map(async (team) => {
       const { data: playersData } = await supabase
@@ -43,12 +44,24 @@ export default async function BasvuruDurumlariPage({
         .select('id, first_name, last_name')
         .eq('team_id', team.id);
 
-      const totalMembers = 1 + (playersData?.length ?? 0);
+      const totalMembers = playersData?.length ?? 0;
+
+      // Check for bank receipt
+      const { data: receiptDoc } = await supabase
+        .from('documents')
+        .select('id')
+        .eq('team_id', team.id)
+        .eq('owner_type', 'team')
+        .eq('document_type', 'bank_receipt')
+        .single();
+
+      const hasReceipt = !!receiptDoc;
 
       return {
         ...team,
         totalMembers,
         players: playersData ?? [],
+        hasReceipt,
       };
     })
   );
@@ -73,10 +86,11 @@ export default async function BasvuruDurumlariPage({
     <div className="min-h-screen bg-[#0d1f12] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Link */}
-        <Link href="/">
-          <p className="text-gray-400 text-sm hover:text-white transition-colors mb-6 block">
-            ← Ana Sayfa
-          </p>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm mb-6"
+        >
+          ← Ana Sayfaya Dön
         </Link>
 
         {/* Center Section */}
@@ -249,6 +263,11 @@ export default async function BasvuruDurumlariPage({
                           </button>
                         </Link>
                       </div>
+                    )}
+
+                    {/* Dekont Bölümü */}
+                    {team.status !== 'approved' && (
+                      <DekontYukle teamKey={team.team_key} hasReceipt={team.hasReceipt} />
                     )}
                   </div>
                 </div>

@@ -34,7 +34,6 @@ export default function OyuncuForm({
     work_certificate: null,
     sgk_certificate: null,
     passport_photo: null,
-    bank_receipt: null,
     other_document: null,
   });
 
@@ -130,7 +129,6 @@ export default function OyuncuForm({
         work_certificate: null,
         sgk_certificate: null,
         passport_photo: null,
-        bank_receipt: null,
         other_document: null,
       });
       setFileNames({});
@@ -402,23 +400,14 @@ export default function OyuncuForm({
                 />
               </div>
 
-              {/* Row 3: Vesikalık - Banka Dekontu */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FileUploadField
-                  label="Vesikalık Fotoğraf"
-                  fieldName="passport_photo"
-                  required={true}
-                  fileName={fileNames.passport_photo}
-                  onChange={(e) => handleFileChange(e, 'passport_photo')}
-                />
-                <FileUploadField
-                  label="Banka Dekontu"
-                  fieldName="bank_receipt"
-                  required={true}
-                  fileName={fileNames.bank_receipt}
-                  onChange={(e) => handleFileChange(e, 'bank_receipt')}
-                />
-              </div>
+              {/* Row 3: Vesikalık (full width) */}
+              <FileUploadField
+                label="Vesikalık Fotoğraf"
+                fieldName="passport_photo"
+                required={true}
+                fileName={fileNames.passport_photo}
+                onChange={(e) => handleFileChange(e, 'passport_photo')}
+              />
 
               {/* Row 4: Diğer Belgeler (full width, optional) */}
               <FileUploadField

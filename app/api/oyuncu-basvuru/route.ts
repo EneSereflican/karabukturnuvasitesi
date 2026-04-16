@@ -18,7 +18,6 @@ const REQUIRED_FILES = [
   'work_certificate',
   'sgk_certificate',
   'passport_photo',
-  'bank_receipt',
 ];
 
 const OPTIONAL_FILES = ['other_document'];
@@ -29,7 +28,6 @@ const DOCUMENT_TYPE_MAP: Record<string, string> = {
   work_certificate: 'work_certificate',
   sgk_certificate: 'sgk_certificate',
   passport_photo: 'passport_photo',
-  bank_receipt: 'bank_receipt',
   other_document: 'other',
 };
 
@@ -145,7 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
     const playerCount = playersData?.length || 0;
-    const totalMembers = playerCount + 1; // +1 for captain
+    const totalMembers = playerCount;
 
     if (totalMembers >= 15) {
       return NextResponse.json(
