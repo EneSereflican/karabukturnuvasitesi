@@ -183,8 +183,8 @@ export default function CaptainRegistrationPage() {
   }
 
   return (
-    <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
-      <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-lg mx-auto">
+    <main className="bg-[#0d1f12] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-4 sm:p-8 max-w-lg mx-auto">
         {/* Header */}
         <Link
           href="/"
@@ -325,7 +325,7 @@ export default function CaptainRegistrationPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {/* Ad Soyad */}
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -401,7 +401,7 @@ export default function CaptainRegistrationPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {/* Ad Soyad */}
                 <div>
                   <label className="block text-gray-300 text-sm font-medium mb-2">

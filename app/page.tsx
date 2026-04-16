@@ -65,18 +65,18 @@ export default function Home() {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+            <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white leading-tight">
               Karabük Kamu Kurum
             </h2>
-            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+            <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white leading-tight">
               ve Kuruluşları Arası
             </h2>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight" style={{ color: '#f0a500' }}>
+            <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold leading-tight" style={{ color: '#f0a500' }}>
               Bahar Futbol Turnuvası
             </h2>
           </div>
 
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto text-center leading-relaxed">
+          <p className="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed">
             Sporun kitlelere yayılması, spora ilginin artırılması, kamu kurumları
             ve sivil toplum kuruluşları arasındaki iletişimin saygı, sevgi, dostluk
             ve hoşgörü diyaloğuna dönüşmesi amacıyla düzenlenmektedir.
@@ -130,11 +130,11 @@ export default function Home() {
       </section>
 
       {/* Info Cards Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0d1f12]">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#0d1f12]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-white">Turnuva Hakkında</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-16 text-white">Turnuva Hakkında</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {/* Card 1 */}
             <Card className="bg-[#1a2e1d] border-[#1a472a] hover:border-[#f0a500] transition-colors">
               <CardHeader>
@@ -180,11 +180,11 @@ export default function Home() {
 
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#1a2e1d]">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#1a2e1d]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-white">Başvuru Süreci</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-16 text-white">Başvuru Süreci</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 step: 1,
@@ -235,12 +235,12 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.80), rgba(13, 31, 18, 0.80)), url(/foto-kupalar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.80), rgba(13, 31, 18, 0.80)), url(/foto-kupalar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white">
             Hemen Başvurun
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-base sm:text-xl text-gray-300">
             Takımınızı oluşturun ve turnuvaya katılın.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -259,17 +259,17 @@ export default function Home() {
       </section>
 
       {/* YAKINDA Section */}
-      <section className="bg-[#0d1f12] py-20 px-4">
+      <section className="bg-[#0d1f12] py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 sm:mb-16">
           <span className="inline-block bg-[#f0a500]/20 text-[#f0a500] text-xs font-bold px-4 py-2 rounded-full tracking-widest uppercase">
             Yakında
           </span>
-          <h2 className="text-white text-4xl font-bold mt-4">
+          <h2 className="text-white text-2xl sm:text-4xl font-bold mt-4">
             Turnuva deneyimini<br />
             <span className="text-[#f0a500]">bir üst seviyeye taşıyoruz</span>
           </h2>
-          <p className="text-gray-400 text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-base sm:text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
             Turnuva sürecinde tüm gelişmeleri anlık olarak takip edebileceksiniz.
           </p>
         </div>
@@ -371,10 +371,10 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#0d1f12] border-t border-[#1a472a] py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-[#0d1f12] border-t border-[#1a472a] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 space-y-2">
-            <p className="text-gray-300">
+            <p className="text-gray-300 text-sm sm:text-base">
               Karabük Kamu Kurumları Bahar Futbol Turnuvası 2026
             </p>
             <p className="text-sm text-gray-500">

@@ -183,7 +183,7 @@ export default function PlayerApplicationPage() {
   if (success && teamInfo) {
     return (
       <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
-        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-lg mx-auto text-center">
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-4 sm:p-8 max-w-lg mx-auto text-center">
           <CheckCircle2
             size={64}
             className="text-green-400 mx-auto"
@@ -228,7 +228,7 @@ export default function PlayerApplicationPage() {
   if (step === 'key') {
     return (
       <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
-        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-lg mx-auto">
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-4 sm:p-8 max-w-lg mx-auto">
           {/* Header */}
           <Link
             href="/"
