@@ -407,7 +407,7 @@ export default function PlayerApplicationPage() {
             {/* TC Kimlik No */}
             <div>
               <label className="block text-sm text-gray-300 mb-2">
-                TC Kimlik No <span className="text-red-400">*</span>
+                TC Kimlik No
               </label>
               <input
                 type="text"
@@ -415,7 +415,6 @@ export default function PlayerApplicationPage() {
                 value={formData.tc_no}
                 onChange={handleInputChange}
                 maxLength={11}
-                required
                 placeholder="TC Kimlik No"
                 className="w-full h-11 bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg px-3 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] placeholder:text-gray-600 transition-colors"
               />
