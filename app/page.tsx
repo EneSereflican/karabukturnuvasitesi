@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lock, Calendar, Trophy, Play, Shield, BarChart2, Bell } from 'lucide-react';
+import { Lock, Calendar, Trophy, Play, Shield, BarChart2, Bell, Sparkles } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -21,31 +21,42 @@ export default function Home() {
             </div>
           </Link>
 
-          <div className="flex gap-3 items-center">
-            <Link href="/admin/giris">
+          <div className="flex gap-1 sm:gap-2 items-center">
+            <Link href="/admin/giris" className="hidden md:flex">
               <div className="flex items-center gap-1 text-gray-400 hover:text-gray-300 text-sm transition-colors">
                 <Lock size={14} />
                 <span>Admin</span>
               </div>
             </Link>
-            <Link href="/basvuru-durumlari">
+            <Link href="/basvuru-durumlari" className="hidden md:flex">
               <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-[#0d1f12]">
                 Başvuru Durumları
               </Button>
             </Link>
             <Link href="/basvuru/kaptan">
-              <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500]">
-                Takım Oluştur
+              <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500] px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
+                <span className="hidden md:inline">Takım </span>Oluştur
               </Button>
             </Link>
             <Link href="/oyuncu-basvuru">
-              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-[#0d1f12]">
-                Takıma Katıl
+              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-[#0d1f12] px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
+                <span className="hidden md:inline">Takıma </span>Katıl
               </Button>
             </Link>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Banner */}
+      <div className="block md:hidden bg-[#f0a500] py-2 px-4 text-center">
+        <div className="flex items-center justify-center gap-2">
+          <Sparkles size={14} className="text-[#0d1f12]" />
+          <p className="text-[#0d1f12] text-xs font-bold">
+            Yenilendik! Tüm işlemlerinizi artık telefonunuzdan kolayca yapabilirsiniz.
+          </p>
+          <Sparkles size={14} className="text-[#0d1f12]" />
+        </div>
+      </div>
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.75), rgba(13, 31, 18, 0.85)), url(/foto-taraftarlar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
