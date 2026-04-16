@@ -73,7 +73,9 @@ export default function CaptainRegistrationPage() {
         fd.append('responsible2_phone', responsible2Phone);
         fd.append('responsible2_email', responsible2Email);
       }
-      fd.append('bank_receipt', bankReceipt);
+      if (bankReceipt) {
+        fd.append('bank_receipt', bankReceipt);
+      }
 
       const response = await fetch('/api/kaptan-basvuru', {
         method: 'POST',
