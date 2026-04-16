@@ -39,12 +39,12 @@ async function getTeamsWithDetails() {
         .single();
 
       // Get player count
-      const { count: playerCount } = await supabase
+      const { data: playersData } = await supabase
         .from('players')
-        .select('*', { count: 'exact', head: true })
+        .select('id')
         .eq('team_id', team.id);
 
-      const totalMembers = 1 + (playerCount ?? 0);
+      const totalMembers = playersData?.length ?? 0;
 
       return {
         ...team,
@@ -101,6 +101,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Back Link */}
+        <Link href="/" className="text-gray-400 hover:text-white text-sm mb-4 inline-block">
+          ← Ana Sayfaya Dön
+        </Link>
         {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
