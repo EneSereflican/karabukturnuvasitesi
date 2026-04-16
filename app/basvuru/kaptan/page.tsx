@@ -38,6 +38,7 @@ export default function CaptainRegistrationPage() {
   const [success, setSuccess] = useState(false);
   const [teamKey, setTeamKey] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,8 +56,14 @@ export default function CaptainRegistrationPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (!kvkkAccepted) {
+      setError('Devam etmek için KVKK metnini onaylamanız gerekmektedir.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const fd = new FormData();
@@ -518,6 +525,22 @@ export default function CaptainRegistrationPage() {
             >
               Nakit ödeme yaptıysanız bu adımı atlayabilirsiniz. Havale veya EFT yapacaksanız lütfen başvurunuz onaylanmadan önce dekontunuzu yükleyin. Tüm takım adına tek dekont yüklenmelidir.
             </div>
+          </div>
+
+          {/* KVKK Checkbox */}
+          <div className="bg-[#0d1f12] border border-[#2d4a32] rounded-xl p-4 mb-4 flex items-start gap-3">
+            <input
+              type="checkbox"
+              checked={kvkkAccepted}
+              onChange={(e) => setKvkkAccepted(e.target.checked)}
+              style={{
+                accentColor: '#f0a500',
+              }}
+              className="mt-1 w-4 h-4 shrink-0 cursor-pointer"
+            />
+            <label className="text-gray-300 text-sm leading-relaxed cursor-pointer">
+              Kişisel verilerimin 6698 sayılı KVKK kapsamında Karabük Kamu Kurumları Bahar Futbol Turnuvası organizasyonu tarafından işlenmesini, saklanmasını ve turnuva süreciyle sınırlı olarak kullanılmasını okudum ve onaylıyorum.
+            </label>
           </div>
 
           {/* Submit Button */}

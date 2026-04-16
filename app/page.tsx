@@ -143,7 +143,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-300">
-                  Her takım en fazla 15, en az 10 oyuncudan oluşabilir.
+                  Her takım en fazla 15 oyuncudan oluşabilir. Başvurunun onaylanabilmesi için en az 10 oyuncu kaydı zorunludur.
                 </p>
               </CardContent>
             </Card>
@@ -156,7 +156,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-300">
-                  Karabük'te görev yapan kamu kurumu çalışanları.
+                  Karabük'te faaliyet gösteren kamu kurum ve kuruluşları ile sivil toplum kuruluşlarında görev yapan çalışanlar.
                 </p>
               </CardContent>
             </Card>
@@ -169,7 +169,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-300">
-                  Takım sorumlusu önce kaydolur, ardından oyuncular davet linki ile başvurularını tamamlar.
+                  Takım sorumlusu takımı oluşturur ve takım anahtarını üyelerine iletir. Oyuncular bu anahtar ile belgelerini yükleyerek kayıt oluşturur.
                 </p>
               </CardContent>
             </Card>

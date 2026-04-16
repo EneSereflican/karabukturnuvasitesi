@@ -46,6 +46,7 @@ export default function PlayerApplicationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
   // ────────────────────────────────────────────────
   // AŞAMA 1: Anahtar doğrulama
@@ -125,8 +126,14 @@ export default function PlayerApplicationPage() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (!kvkkAccepted) {
+      setError('Devam etmek için KVKK metnini onaylamanız gerekmektedir.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const form = new FormData();
@@ -530,6 +537,22 @@ export default function PlayerApplicationPage() {
                 onChange={(e) => handleFileChange(e, 'other_document')}
               />
             </div>
+          </div>
+
+          {/* KVKK Checkbox */}
+          <div className="bg-[#0d1f12] border border-[#2d4a32] rounded-xl p-4 mb-4 flex items-start gap-3">
+            <input
+              type="checkbox"
+              checked={kvkkAccepted}
+              onChange={(e) => setKvkkAccepted(e.target.checked)}
+              style={{
+                accentColor: '#f0a500',
+              }}
+              className="mt-1 w-4 h-4 shrink-0 cursor-pointer"
+            />
+            <label className="text-gray-300 text-sm leading-relaxed cursor-pointer">
+              Kişisel verilerimin 6698 sayılı KVKK kapsamında Karabük Kamu Kurumları Bahar Futbol Turnuvası organizasyonu tarafından işlenmesini, saklanmasını ve turnuva süreciyle sınırlı olarak kullanılmasını okudum ve onaylıyorum.
+            </label>
           </div>
 
           {/* Submit Button */}
