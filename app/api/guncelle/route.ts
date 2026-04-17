@@ -19,7 +19,7 @@ const documentTypeLabels: Record<string, string> = {
   sgk_certificate: 'SGK Belgesi',
   passport_photo: 'Vesikalık Fotoğraf',
   bank_receipt: 'Banka Dekontu',
-  other_document: 'Diğer Belge',
+  other: 'Diğer Belge',
 };
 
 export async function POST(request: NextRequest) {
@@ -88,11 +88,13 @@ export async function POST(request: NextRequest) {
       'sgk_certificate',
       'passport_photo',
       'bank_receipt',
-      'other_document',
+      'other',
     ];
 
     for (const docType of documentTypes) {
-      const file = formData.get(docType) as File | null;
+      // Map form field names - form sends 'other_document' for 'other' docType
+      const formFieldName = docType === 'other' ? 'other_document' : docType;
+      const file = formData.get(formFieldName) as File | null;
 
       if (!file) continue;
 
@@ -152,14 +154,15 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-
-      // Insert document record
+dbDocType = docType === 'other_document' ? 'other' : docType;
       const { error: insertError } = await supabase
         .from('documents')
         .insert([
           {
             team_id: team.id,
             owner_type: 'player',
+            owner_id: player.id,
+            document_type: dbDyer',
             owner_id: player.id,
             document_type: docType,
             file_path: filePath,
