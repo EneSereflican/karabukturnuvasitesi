@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-dbDocType = docType === 'other_document' ? 'other' : docType;
+      const dbDocType = docType === 'other_document' ? 'other' : docType;
       const { error: insertError } = await supabase
         .from('documents')
         .insert([
@@ -162,9 +162,7 @@ dbDocType = docType === 'other_document' ? 'other' : docType;
             team_id: team.id,
             owner_type: 'player',
             owner_id: player.id,
-            document_type: dbDyer',
-            owner_id: player.id,
-            document_type: docType,
+            document_type: dbDocType,
             file_path: filePath,
             file_name: file.name,
             file_size: file.size,
