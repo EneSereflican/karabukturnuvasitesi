@@ -21,7 +21,7 @@ const REQUIRED_FILES = [
   'other_document',
 ];
 
-const OPTIONAL_FILES = [];
+const OPTIONAL_FILES: string[] = [];
 
 const DOCUMENT_TYPE_MAP: Record<string, string> = {
   tc_front: 'tc_front',
