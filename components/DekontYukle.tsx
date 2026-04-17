@@ -132,9 +132,11 @@ export default function DekontYukle({
 
       {/* Upload Dialog */}
       {showKeyInput && selectedFile && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 max-w-sm w-full">
-            <div className="flex items-center justify-between mb-6">
+        <div 
+          className="mt-3 border border-[#2d4a32] rounded-2xl p-6"
+          style={{ backgroundColor: '#1a2e1d' }}
+        >
+          <div className="flex items-center justify-between mb-6">
               <h3 className="text-white font-bold text-lg">Dekont Yükle</h3>
               <button
                 onClick={() => {
