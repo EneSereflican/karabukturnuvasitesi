@@ -215,7 +215,6 @@ export default function DekontYukle({
               )}
             </button>
           </div>
-        </div>
       )}
     </>
   );
