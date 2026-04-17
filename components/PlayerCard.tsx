@@ -159,9 +159,37 @@ export default function PlayerCard({ player, documents, onDelete }: PlayerCardPr
                     }}
                     className="border rounded-xl p-4 hover:border-[#f0a500]/30 transition-colors"
                   >
-            
-
-          {/* Delete Section */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-2 min-w-0 flex-1">
+                        <File
+                          size={18}
+                          style={{ color: '#f0a500' }}
+                          className="shrink-0 mt-0.5"
+                        />
+                        <div className="min-w-0">
+                          <p className="text-white text-sm font-medium">
+                            {getDocumentTypeName(doc.document_type)}
+                          </p>
+                          <p className="text-gray-400 text-xs truncate mt-0.5">
+                            {doc.file_name}
+                          </p>
+                          <p className="text-gray-500 text-xs mt-1">
+                            {Math.round(doc.file_size / 1024)} KB
+                          </p>
+                        </div>
+                      </div>
+                      <div className="shrink-0">
+                        <BelgeButonlari
+                          filePath={doc.file_path}
+                          fileName={doc.file_name}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
           <div
             style={{
               backgroundColor: 'rgba(239, 68, 68, 0.1)',
