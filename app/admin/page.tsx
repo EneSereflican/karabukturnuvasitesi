@@ -99,14 +99,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   });
 
   return (
-    <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen p-8">
+    <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Back Link */}
         <Link href="/" className="text-gray-400 hover:text-white text-sm mb-4 inline-block">
           ← Ana Sayfaya Dön
         </Link>
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">Başvuru Yönetimi</h1>
             <p className="text-gray-400 text-sm mt-1">
@@ -119,14 +119,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Total Applications */}
           <div
             style={{
               backgroundColor: '#1a2e1d',
               borderColor: '#2d4a32',
             }}
-            className="border rounded-2xl p-6"
+            className="border rounded-2xl p-4 sm:p-6"
           >
             <Users size={20} className="text-gray-400 mb-2" />
             <p style={{ color: 'white' }} className="text-3xl font-bold mt-2">
@@ -141,7 +141,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               backgroundColor: '#1a2e1d',
               borderColor: 'rgba(234, 179, 8, 0.3)',
             }}
-            className="border rounded-2xl p-6 bg-opacity-5"
+            className="border rounded-2xl p-4 sm:p-6 bg-opacity-5"
           >
             <Clock size={20} className="text-yellow-400 mb-2" />
             <p className="text-3xl font-bold mt-2 text-yellow-400">
@@ -156,7 +156,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               backgroundColor: '#1a2e1d',
               borderColor: 'rgba(34, 197, 94, 0.3)',
             }}
-            className="border rounded-2xl p-6 bg-opacity-5"
+            className="border rounded-2xl p-4 sm:p-6 bg-opacity-5"
           >
             <CheckCircle2 size={20} className="text-green-400 mb-2" />
             <p className="text-3xl font-bold mt-2 text-green-400">
@@ -171,7 +171,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               backgroundColor: '#1a2e1d',
               borderColor: 'rgba(239, 68, 68, 0.3)',
             }}
-            className="border rounded-2xl p-6 bg-opacity-5"
+            className="border rounded-2xl p-4 sm:p-6 bg-opacity-5"
           >
             <XCircle size={20} className="text-red-400 mb-2" />
             <p className="text-3xl font-bold mt-2 text-red-400">
@@ -222,7 +222,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   }}
                 >
                   <div
-                    className="border border-[#2d4a32] rounded-2xl p-5 group-hover:border-[#f0a500]/40 hover:bg-[#1a2e1d]/80 transition-all cursor-pointer"
+                    className="border border-[#2d4a32] rounded-2xl p-4 sm:p-5 group-hover:border-[#f0a500]/40 hover:bg-[#1a2e1d]/80 transition-all cursor-pointer"
                     style={{
                       backgroundColor: '#1a2e1d',
                     }}

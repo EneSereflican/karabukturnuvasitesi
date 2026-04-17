@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // totalMembers includes captain (1) + players
-    const totalMembers = 1 + (count || 0);
+    // totalMembers includes players only
+    const totalMembers = count || 0;
 
     if (totalMembers >= 15) {
       return NextResponse.json(
