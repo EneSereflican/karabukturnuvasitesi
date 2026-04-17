@@ -19,11 +19,20 @@ export async function POST(request: NextRequest) {
     // Get team_key and bank_receipt
     const teamKey = formData.get('team_key') as string | null;
     const bankReceiptFile = formData.get('bank_receipt') as File | null;
+    const responsible_email = formData.get('responsible_email') as string;
 
     // Validate both are present
     if (!teamKey || !bankReceiptFile) {
       return NextResponse.json(
         { error: 'Takım anahtarı ve dekont dosyası zorunludur' },
+        { status: 400 }
+      );
+    }
+
+    // Validate responsible email
+    if (!responsible_email) {
+      return NextResponse.json(
+        { error: 'Sorumlu e-posta adresi gereklidir' },
         { status: 400 }
       );
     }
@@ -50,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Get team by team_key
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
-      .select('id, name, status')
+      .select('id, name, status, responsible1_email, responsible2_email')
       .eq('team_key', teamKey)
       .single();
 
@@ -58,6 +67,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Geçersiz takım anahtarı' },
         { status: 404 }
+      );
+    }
+
+    // Verify responsible email
+    const isResponsible =
+      teamData.responsible1_email === responsible_email ||
+      teamData.responsible2_email === responsible_email;
+
+    if (!isResponsible) {
+      return NextResponse.json(
+        { error: 'Sadece takım sorumluları dekont yükleyebilir. E-posta adresiniz sorumlu olarak kayıtlı değil.' },
+        { status: 403 }
       );
     }
 

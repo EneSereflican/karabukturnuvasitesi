@@ -15,6 +15,7 @@ export default function DekontYukle({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showKeyInput, setShowKeyInput] = useState(false);
   const [enteredKey, setEnteredKey] = useState('');
+  const [responsibleEmail, setResponsibleEmail] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,7 @@ export default function DekontYukle({
       const formData = new FormData();
       formData.append('team_key', enteredKey.toUpperCase());
       formData.append('bank_receipt', selectedFile);
+      formData.append('responsible_email', responsibleEmail);
 
       const response = await fetch('/api/dekont-yukle', {
         method: 'POST',
@@ -139,6 +141,7 @@ export default function DekontYukle({
                   setShowKeyInput(false);
                   setSelectedFile(null);
                   setEnteredKey('');
+                  setResponsibleEmail('');
                   setError(null);
                 }}
                 className="text-gray-400 hover:text-white"
@@ -170,6 +173,23 @@ export default function DekontYukle({
               />
             </div>
 
+            {/* Responsible Email Input */}
+            <div className="mb-6">
+              <label className="block text-gray-300 text-sm font-medium mb-2">
+                Sorumlu E-posta Adresi
+              </label>
+              <input
+                type="email"
+                value={responsibleEmail}
+                onChange={(e) => setResponsibleEmail(e.target.value)}
+                placeholder="Takım sorumlusunun e-posta adresi"
+                className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-10 w-full mt-2 focus:border-[#f0a500] focus:ring-1 focus:ring-[#f0a500] transition-colors px-3"
+              />
+              <p className="text-gray-400 text-xs mt-1">
+                Takım oluşturulurken girilen sorumlu e-posta adresi ile doğrulama yapılır.
+              </p>
+            </div>
+
             {/* Error Message */}
             {error && (
               <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-3 text-sm">
@@ -180,7 +200,7 @@ export default function DekontYukle({
             {/* Upload Button */}
             <button
               onClick={handleUpload}
-              disabled={loading || !enteredKey || !selectedFile}
+              disabled={loading || !enteredKey || !responsibleEmail || !selectedFile}
               className="w-full bg-[#f0a500] text-[#0d1f12] font-bold h-10 rounded-lg hover:bg-[#f0a500]/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
