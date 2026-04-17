@@ -195,7 +195,8 @@ export default function BelgeGuncellePage() {
               </Button>
             </form>
           </div>
-        </div>        </div>      </div>
+        </div>
+      </div>
     );
   }
 
