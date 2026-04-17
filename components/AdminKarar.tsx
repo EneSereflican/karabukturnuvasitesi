@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Loader2,
   XCircle,
+  RefreshCw,
 } from 'lucide-react';
 
 interface AdminKararProps {
@@ -98,6 +99,36 @@ export default function AdminKarar({
     }
   };
 
+  const handleUnreject = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/admin/karar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teamId,
+          action: 'unreject',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'İşlem sırasında hata oluştu');
+        setLoading(false);
+        return;
+      }
+
+      window.location.reload();
+    } catch (err) {
+      setError('İşlem sırasında hata oluştu');
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
   if (isApproved) {
     return (
       <div
@@ -181,7 +212,7 @@ export default function AdminKarar({
 
       {!showRejectForm ? (
         // Decision Buttons
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className={`mt-4 ${currentStatus === 'rejected' ? 'grid grid-cols-1 sm:grid-cols-3 gap-4' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
           {/* Approve Button */}
           <button
             onClick={handleApprove}
@@ -228,6 +259,31 @@ export default function AdminKarar({
               </>
             )}
           </button>
+
+          {/* Unreject Button (only when status is rejected) */}
+          {currentStatus === 'rejected' && (
+            <button
+              onClick={handleUnreject}
+              disabled={loading}
+              style={{
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: 'rgba(59, 130, 246, 0.3)',
+              }}
+              className="bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 h-12 rounded-xl font-bold w-full sm:w-auto flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  İşlem Yapılıyor
+                </>
+              ) : (
+                <>
+                  <RefreshCw size={16} />
+                  Reddi Kaldır
+                </>
+              )}
+            </button>
+          )}
         </div>
       ) : (
         // Reject Form

@@ -78,6 +78,24 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
+    } else if (action === 'unreject') {
+      // Update team status to pending
+      const { error: updateError } = await supabase
+        .from('teams')
+        .update({
+          status: 'pending',
+          rejection_note: null,
+          rejected_player_ids: [],
+        })
+        .eq('id', teamId);
+
+      if (updateError) {
+        console.error('Update error:', updateError);
+        return NextResponse.json(
+          { error: 'İşlem sırasında hata oluştu' },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
