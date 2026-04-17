@@ -19,6 +19,7 @@ import {
   File,
   ChevronLeft,
   Palette,
+  AlertCircle,
 } from 'lucide-react';
 
 interface AdminTeamPageProps {
@@ -89,6 +90,11 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const documentsData = documentsDataRaw ?? [];
 
   const totalMembers = playersData.length;
+
+  // Get team receipt for payment
+  const teamReceipt = documentsData.find(
+    (d) => d.owner_type === 'team' && d.document_type === 'bank_receipt'
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -294,6 +300,64 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
               </div>
             </div>
           ) : null}
+
+          {/* Payment Receipt Section */}
+          <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
+
+          <div className="flex items-center gap-2 mb-3">
+            <FileText size={16} style={{ color: '#f0a500' }} />
+            <p className="text-white font-medium">Ödeme Dekontu</p>
+          </div>
+
+          {teamReceipt ? (
+            <div
+              style={{
+                backgroundColor: '#0d1f12',
+                borderColor: '#2d4a32',
+              }}
+              className="border rounded-xl p-4 hover:border-[#f0a500]/30 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-2 min-w-0 flex-1">
+                  <File
+                    size={18}
+                    style={{ color: '#f0a500' }}
+                    className="shrink-0 mt-0.5"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-white text-sm font-medium">
+                      Banka Dekontu
+                    </p>
+                    <p className="text-gray-400 text-xs truncate mt-0.5">
+                      {teamReceipt.file_name}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      {Math.round(teamReceipt.file_size / 1024)} KB
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <BelgeButonlari
+                    filePath={teamReceipt.file_path}
+                    fileName={teamReceipt.file_name}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                backgroundColor: '#0d1f12',
+                borderColor: '#2d4a32',
+              }}
+              className="border rounded-xl p-3"
+            >
+              <div className="flex items-center gap-2">
+                <AlertCircle size={14} className="text-yellow-400" />
+                <p className="text-gray-400 text-sm">Henüz dekont yüklenmemiştir.</p>
+              </div>
+            </div>
+          )}
 
           {/* No Responsibles Message */}
           {!teamData.responsible1_name && !teamData.responsible2_name && (
