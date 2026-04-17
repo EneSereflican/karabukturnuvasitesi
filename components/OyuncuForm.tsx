@@ -81,6 +81,12 @@ export default function OyuncuForm({
     setError(null);
     setSuccess(false);
 
+    if (!files['other_document']) {
+      setError('Lütfen taahhütname belgesini yükleyin.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const form = new FormData();
 
@@ -419,14 +425,17 @@ export default function OyuncuForm({
                 onChange={(e) => handleFileChange(e, 'passport_photo')}
               />
 
-              {/* Row 4: Diğer Belgeler (full width, optional) */}
+              {/* Row 4: Taahhütname (full width) */}
               <FileUploadField
-                label="Diğer Belgeler"
+                label="Taahhütname"
                 fieldName="other_document"
-                required={false}
+                required={true}
                 fileName={fileNames.other_document}
                 onChange={(e) => handleFileChange(e, 'other_document')}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Turnuva katılım taahhütnamesini imzalayıp taratarak yükleyiniz. PDF, JPG veya PNG
+              </p>
             </div>
           </div>
 

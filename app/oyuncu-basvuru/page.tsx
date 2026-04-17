@@ -132,6 +132,11 @@ export default function PlayerApplicationPage() {
       return;
     }
 
+    if (!files['other_document']) {
+      setError('Lütfen taahhütname belgesini yükleyin.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -530,14 +535,17 @@ export default function PlayerApplicationPage() {
                 onChange={(e) => handleFileChange(e, 'passport_photo')}
               />
 
-              {/* Row 4: Diğer Belgeler */}
+              {/* Row 4: Taahhütname */}
               <FileUploadField
-                label="Diğer Belgeler"
+                label="Taahhütname"
                 fieldName="other_document"
-                required={false}
+                required={true}
                 fileName={fileNames.other_document}
                 onChange={(e) => handleFileChange(e, 'other_document')}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Turnuva katılım taahhütnamesini imzalayıp taratarak yükleyiniz. PDF, JPG veya PNG
+              </p>
             </div>
           </div>
 

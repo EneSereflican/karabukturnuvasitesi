@@ -18,9 +18,10 @@ const REQUIRED_FILES = [
   'work_certificate',
   'sgk_certificate',
   'passport_photo',
+  'other_document',
 ];
 
-const OPTIONAL_FILES = ['other_document'];
+const OPTIONAL_FILES = [];
 
 const DOCUMENT_TYPE_MAP: Record<string, string> = {
   tc_front: 'tc_front',
@@ -53,6 +54,15 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+    }
+
+    // Validate other_document is provided
+    const otherDocument = formData.get('other_document') as File | null;
+    if (!otherDocument || otherDocument.size === 0) {
+      return NextResponse.json(
+        { error: 'Taahhütname belgesi zorunludur' },
+        { status: 400 }
+      );
     }
 
     // Validate all files (required and optional)
