@@ -4,11 +4,11 @@ import { createServiceClient } from '@/lib/supabase/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { team_key, tc_no } = body;
+    const { team_key, identifier } = body;
 
-    if (!team_key || !tc_no) {
+    if (!team_key || !identifier) {
       return NextResponse.json(
-        { error: 'Takım anahtarı ve TC kimlik numarası gerekli' },
+        { error: 'Takım anahtarı ve kimlik bilgisi gerekli' },
         { status: 400 }
       );
     }
@@ -36,17 +36,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Determine if identifier is email or TC ID
+    const isEmail = identifier.includes('@');
+
     // Fetch player
-    const { data: player, error: playerError } = await supabase
+    let query = supabase
       .from('players')
       .select('id, first_name, last_name')
-      .eq('tc_no', tc_no)
-      .eq('team_id', team.id)
-      .single();
+      .eq('team_id', team.id);
+
+    if (isEmail) {
+      query = query.eq('email', identifier);
+    } else {
+      query = query.eq('tc_no', identifier);
+    }
+
+    const { data: player, error: playerError } = await query.single();
 
     if (playerError || !player) {
       return NextResponse.json(
-        { error: 'Bu TC kimlik numarası ile kayıt bulunamadı' },
+        {
+          error:
+            'Bu bilgi ile kayıt bulunamadı. TC kimlik numarası veya e-posta adresinizi kontrol edin.',
+        },
         { status: 404 }
       );
     }

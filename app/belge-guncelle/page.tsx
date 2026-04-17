@@ -28,7 +28,7 @@ export default function BelgeGuncellePage() {
 
   // Auth form
   const [teamKey, setTeamKey] = useState('');
-  const [tcNo, setTcNo] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
 
@@ -47,7 +47,7 @@ export default function BelgeGuncellePage() {
       const response = await fetch('/api/oyuncu-bul', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team_key: teamKey, tc_no: tcNo }),
+        body: JSON.stringify({ team_key: teamKey, identifier }),
       });
 
       const data = await response.json();
@@ -120,7 +120,7 @@ export default function BelgeGuncellePage() {
 
   if (step === 'auth') {
     return (
-      <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen py-12 px-4">
+      <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
           <Link href="/">
             <p className="text-gray-400 text-sm hover:text-white transition-colors mb-6 flex items-center gap-1">
@@ -134,7 +134,7 @@ export default function BelgeGuncellePage() {
               backgroundColor: '#1a2e1d',
               borderColor: '#2d4a32',
             }}
-            className="border border-[#2d4a32] rounded-2xl p-8"
+            className="border border-[#2d4a32] rounded-2xl p-4 sm:p-8"
           >
             <div className="inline-block bg-[#f0a500]/20 border border-[#f0a500]/30 rounded-full px-4 py-2 mb-6">
               <span className="text-[#f0a500] text-sm font-semibold">Belge Güncelleme</span>
@@ -142,7 +142,7 @@ export default function BelgeGuncellePage() {
 
             <h1 className="text-white text-2xl font-bold mb-2">Belgelerini Güncelle</h1>
             <p className="text-gray-400 text-sm mb-6">
-              Takım anahtarınızı ve TC kimlik numaranızı girin.
+              Takım anahtarınızı ve TC kimlik numaranızı veya e-posta adresinizi girin.
             </p>
 
             {authError && (
@@ -172,16 +172,18 @@ export default function BelgeGuncellePage() {
               </div>
 
               <div>
-                <label className="block text-gray-300 text-sm mb-2">TC Kimlik No</label>
+                <label className="block text-gray-300 text-sm mb-2">TC Kimlik No veya E-posta</label>
                 <input
                   type="text"
-                  value={tcNo}
-                  onChange={(e) => setTcNo(e.target.value)}
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
-                  maxLength={11}
-                  className="w-full bg-[#0d1f12] border border-[#2d4a32] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#f0a500]"
-                  placeholder="12345678901"
+                  className="bg-[#0d1f12] border border-[#2d4a32] text-white rounded-lg h-12 w-full focus:border-[#f0a500] focus:outline-none px-4 placeholder-gray-500"
+                  placeholder="TC kimlik no veya e-posta adresiniz"
                 />
+                <p className="text-gray-500 text-xs mt-1">
+                  Kayıt sırasında girdiğiniz TC kimlik numaranızı veya e-posta adresinizi girin.
+                </p>
               </div>
 
               <Button
@@ -193,14 +195,13 @@ export default function BelgeGuncellePage() {
               </Button>
             </form>
           </div>
-        </div>
-      </div>
+        </div>        </div>      </div>
     );
   }
 
   if (step === 'form' && playerInfo) {
     return (
-      <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen py-12 px-4">
+      <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           {/* Bilgi Kartı */}
           <div
@@ -208,9 +209,9 @@ export default function BelgeGuncellePage() {
               backgroundColor: '#1a2e1d',
               borderColor: '#2d4a32',
             }}
-            className="border border-[#2d4a32] rounded-2xl p-6 mb-6"
+            className="border border-[#2d4a32] rounded-2xl p-4 sm:p-6 mb-6"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-gray-400 text-xs mb-1">Takım Adı</p>
                 <p className="text-white font-medium">{playerInfo.team_name}</p>
@@ -249,7 +250,7 @@ export default function BelgeGuncellePage() {
               backgroundColor: '#1a2e1d',
               borderColor: '#2d4a32',
             }}
-            className="border border-[#2d4a32] rounded-2xl p-6"
+            className="border border-[#2d4a32] rounded-2xl p-4 sm:p-6"
           >
             <h2 className="text-white font-bold text-xl mb-2">
               Güncellenecek Belgeleri Seçin
