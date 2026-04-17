@@ -47,6 +47,11 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* Başvurular Askıya Alındı Banner */}
+      <div className="w-full bg-red-500 text-white text-center py-3 px-4 font-semibold text-sm">
+        Başvurular geçici olarak askıya alınmıştır. Bilgi için yönetici ile iletişime geçiniz.
+      </div>
+
       {/* Mobile Banner */}
       <div className="block md:hidden bg-[#f0a500] py-2 px-4 text-center">
         <div className="flex items-center justify-center gap-2">

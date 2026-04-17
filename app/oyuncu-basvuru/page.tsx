@@ -1,103 +1,27 @@
 'use client';
 
-import Link from 'next/link';
-import { useState, useRef } from 'react';
-import {
-  FileText,
-  Info,
-  XCircle,
-  CheckCircle2,
-  Loader2,
-} from 'lucide-react';
-
-interface TeamInfo {
-  team_id: string;
-  team_name: string;
-  institution: string;
-}
-
 export default function PlayerApplicationPage() {
-  const [step, setStep] = useState<'key' | 'form'>('key');
-  const [teamKey, setTeamKey] = useState('');
-  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
-
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    tc_no: '',
-    institution: '',
-    jersey_number: '',
-  });
-
-  const [files, setFiles] = useState<Record<string, File | null>>({
-    tc_front: null,
-    tc_back: null,
-    work_certificate: null,
-    sgk_certificate: null,
-    passport_photo: null,
-    other_document: null,
-  });
-
-  const [fileNames, setFileNames] = useState<Record<string, string>>({});
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [kvkkAccepted, setKvkkAccepted] = useState(false);
-
-  // ────────────────────────────────────────────────
-  // AŞAMA 1: Anahtar doğrulama
-  // ────────────────────────────────────────────────
-
-  const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeamKey(e.target.value.toUpperCase());
-  };
-
-  const handleKeySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/anahtar-dogrula', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team_key: teamKey }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Bir hata oluştu');
-        setLoading(false);
-        return;
-      }
-
-      setTeamInfo({
-        team_id: data.team_id,
-        team_name: data.team_name,
-        institution: data.institution,
-      });
-      setStep('form');
-      setLoading(false);
-    } catch (err) {
-      console.error('Error:', err);
-      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
-      setLoading(false);
-    }
-  };
-
-  // ────────────────────────────────────────────────
-  // AŞAMA 2: Form
-  // ────────────────────────────────────────────────
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
+  return (
+    <div style={{ backgroundColor: '#0d1f12' }} 
+      className="min-h-screen flex items-center justify-center px-4">
+      <div style={{ backgroundColor: '#1a2e1d' }}
+        className="border border-red-500/30 rounded-2xl p-8 
+        max-w-md w-full text-center">
+        <div className="text-red-400 text-5xl mb-4">⚠</div>
+        <h1 className="text-white text-xl font-bold mb-3">
+          Başvurular Askıya Alındı
+        </h1>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          Başvurular geçici olarak kapatılmıştır.
+          Bilgi için yönetici ile iletişime geçiniz.
+        </p>
+        <a href="/" className="inline-block mt-6 text-[#f0a500] 
+          text-sm hover:underline">
+          ← Ana Sayfaya Dön
+        </a>
+      </div>
+    </div>
+  );
     }));
   };
 
