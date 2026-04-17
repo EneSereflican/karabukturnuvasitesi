@@ -137,6 +137,11 @@ export default function PlayerApplicationPage() {
       return;
     }
 
+    if (!files['other_document'] && !fileNames['other_document']) {
+      setError('Lütfen taahhütname belgesini yükleyin.');
+      return;
+    }
+
     setLoading(true);
 
     try {
