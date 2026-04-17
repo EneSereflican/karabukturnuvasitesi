@@ -1,31 +1,133 @@
 'use client';
 
+import Link from 'next/link';
+import { useState, useRef } from 'react';
+import {
+  CheckCircle2,
+  Copy,
+  Check,
+  AlertTriangle,
+  XCircle,
+  Loader2,
+  Info,
+  AlertCircle,
+} from 'lucide-react';
+
 export default function CaptainRegistrationPage() {
-  return (
-    <div style={{ backgroundColor: '#0d1f12' }} 
-      className="min-h-screen flex items-center justify-center px-4">
-      <div style={{ backgroundColor: '#1a2e1d' }}
-        className="border border-red-500/30 rounded-2xl p-8 
-        max-w-md w-full text-center">
-        <div className="text-red-400 text-5xl mb-4">⚠</div>
-        <h1 className="text-white text-xl font-bold mb-3">
-          Başvurular Askıya Alındı
-        </h1>
-        <p className="text-gray-400 text-sm leading-relaxed">
-          Başvurular geçici olarak kapatılmıştır.
-          Bilgi için yönetici ile iletişime geçiniz.
-        </p>
-        <a href="/" className="inline-block mt-6 text-[#f0a500] 
-          text-sm hover:underline">
-          ← Ana Sayfaya Dön
-        </a>
-      </div>
-    </div>
-  );
+  const BASVURULAR_KAPALI = true;
+
+  const [formData, setFormData] = useState({
+    team_name: '',
+    institution: '',
+    jersey_color: '',
+  });
+
+  const [responsible1Name, setResponsible1Name] = useState('');
+  const [responsible1Phone, setResponsible1Phone] = useState('');
+  const [responsible1Email, setResponsible1Email] = useState('');
+  const [hasSecondResponsible, setHasSecondResponsible] = useState(false);
+  const [responsible2Name, setResponsible2Name] = useState('');
+  const [responsible2Phone, setResponsible2Phone] = useState('');
+  const [responsible2Email, setResponsible2Email] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [teamKey, setTeamKey] = useState<string>('');
+  const [copied, setCopied] = useState(false);
+  const [kvkkAccepted, setKvkkAccepted] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!kvkkAccepted) {
+      setError('Devam etmek için KVKK metnini onaylamanız gerekmektedir.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const fd = new FormData();
+      fd.append('team_name', formData.team_name);
+      fd.append('institution', formData.institution);
+      if (formData.jersey_color) {
+        fd.append('jersey_color', formData.jersey_color);
+      }
+      fd.append('responsible1_name', responsible1Name);
+      fd.append('responsible1_phone', responsible1Phone);
+      fd.append('responsible1_email', responsible1Email);
+      if (hasSecondResponsible) {
+        fd.append('responsible2_name', responsible2Name);
+        fd.append('responsible2_phone', responsible2Phone);
+        fd.append('responsible2_email', responsible2Email);
+      }
+
+      const response = await fetch('/api/kaptan-basvuru', {
+        method: 'POST',
+        body: fd,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Bir hata oluştu');
+        setLoading(false);
+        return;
+      }
+
+      setSuccess(true);
+      setTeamKey(data.team_key);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
+      setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(teamKey);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Copy failed:', err);
     }
   };
+
+  if (BASVURULAR_KAPALI) {
+    return (
+      <div style={{ backgroundColor: '#0d1f12' }} 
+        className="min-h-screen flex items-center justify-center px-4">
+        <div style={{ backgroundColor: '#1a2e1d' }}
+          className="border border-red-500/30 rounded-2xl p-8 
+          max-w-md w-full text-center">
+          <div className="text-red-400 text-5xl mb-4">⚠</div>
+          <h1 className="text-white text-xl font-bold mb-3">
+            Başvurular Askıya Alındı
+          </h1>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            Başvurular geçici olarak kapatılmıştır.
+            Bilgi için yönetici ile iletişime geçiniz.
+          </p>
+          <a href="/" className="inline-block mt-6 text-[#f0a500] 
+            text-sm hover:underline">
+            ← Ana Sayfaya Dön
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   if (success) {
     return (
