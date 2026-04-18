@@ -17,7 +17,7 @@ interface TeamInfo {
 }
 
 export default function PlayerApplicationPage() {
-  const BASVURULAR_KAPALI = true;
+  const BASVURULAR_KAPALI = false;
 
   const [step, setStep] = useState<'key' | 'form'>('key');
   const [teamKey, setTeamKey] = useState('');

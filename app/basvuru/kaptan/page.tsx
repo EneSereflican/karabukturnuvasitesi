@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export default function CaptainRegistrationPage() {
-  const BASVURULAR_KAPALI = true;
+  const BASVURULAR_KAPALI = false;
 
   const [formData, setFormData] = useState({
     team_name: '',
