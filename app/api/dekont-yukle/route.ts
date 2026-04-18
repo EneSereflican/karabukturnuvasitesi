@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     const teamKey = formData.get('team_key') as string | null;
     const bankReceiptFile = formData.get('bank_receipt') as File | null;
     const responsible_email = formData.get('responsible_email') as string;
+    const identifier = formData.get('identifier') as string;
 
     // Validate both are present
     if (!teamKey || !bankReceiptFile) {
@@ -33,6 +34,14 @@ export async function POST(request: NextRequest) {
     if (!responsible_email) {
       return NextResponse.json(
         { error: 'Sorumlu e-posta adresi gereklidir' },
+        { status: 400 }
+      );
+    }
+
+    // Validate identifier
+    if (!identifier) {
+      return NextResponse.json(
+        { error: 'TC kimlik no veya e-posta gereklidir' },
         { status: 400 }
       );
     }
@@ -59,7 +68,7 @@ export async function POST(request: NextRequest) {
     // Get team by team_key
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
-      .select('id, name, status, responsible1_email, responsible2_email')
+      .select('id, name, status, responsible1_email, responsible2_email, responsible1_name, responsible2_name')
       .eq('team_key', teamKey)
       .single();
 
@@ -70,14 +79,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify responsible email
-    const isResponsible =
-      teamData.responsible1_email === responsible_email ||
-      teamData.responsible2_email === responsible_email;
+    // Verify identifier
+    const isIdentifierEmail = identifier.includes('@');
 
-    if (!isResponsible) {
+    let identifierValid = false;
+
+    if (isIdentifierEmail) {
+      const { data: playerCheck } = await supabase
+        .from('players')
+        .select('id')
+        .eq('team_id', teamData.id)
+        .eq('email', identifier)
+        .single();
+      identifierValid = !!playerCheck;
+      
+      if (!identifierValid) {
+        identifierValid = 
+          teamData.responsible1_email === identifier ||
+          teamData.responsible2_email === identifier;
+      }
+    } else {
+      const { data: playerCheck } = await supabase
+        .from('players')
+        .select('id')
+        .eq('team_id', teamData.id)
+        .eq('tc_no', identifier)
+        .single();
+      identifierValid = !!playerCheck;
+    }
+
+    if (!identifierValid) {
       return NextResponse.json(
-        { error: 'Sadece takım sorumluları dekont yükleyebilir. E-posta adresiniz sorumlu olarak kayıtlı değil.' },
+        { error: 'Bu TC kimlik no veya e-posta bu takımda kayıtlı değil' },
         { status: 403 }
       );
     }
