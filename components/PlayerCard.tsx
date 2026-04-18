@@ -38,7 +38,7 @@ function getDocumentTypeName(type: string): string {
     sgk_certificate: 'SGK Belgesi',
     passport_photo: 'Vesikalık Fotoğraf',
     bank_receipt: 'Banka Dekontu',
-    other: 'Diğer Belge',
+    other: 'Taahhütname',
   };
   return typeMap[type] || type;
 }
