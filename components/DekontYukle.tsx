@@ -42,7 +42,9 @@ export default function DekontYukle({
     try {
       const formData = new FormData();
       formData.append('team_key', enteredKey.toUpperCase());
-      formData.append('bank_receipt', selectedFile);
+      if (selectedFile) {
+        formData.append('bank_receipt', selectedFile);
+      }
       formData.append('responsible_email', responsibleEmail);
       formData.append('identifier', identifier);
 
