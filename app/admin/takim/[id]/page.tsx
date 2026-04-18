@@ -301,11 +301,6 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
             </div>
           ) : null}
 
-          {!teamData.responsible1_name && !teamData.responsible2_name && (
-            <p className="text-gray-400 text-sm">Takım sorumlusu bilgisi girilmemiştir.</p>
-          )}
-        </div>
-
           {/* Payment Receipt Section */}
           <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
 
@@ -362,11 +357,6 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
                 <p className="text-gray-400 text-sm">Henüz dekont yüklenmemiştir.</p>
               </div>
             </div>
-          )}
-
-          {/* No Responsibles Message */}
-          {!teamData.responsible1_name && !teamData.responsible2_name && (
-            <p className="text-gray-400 text-sm">Takım sorumlusu bilgisi girilmemiştir.</p>
           )}
         </div>
 
