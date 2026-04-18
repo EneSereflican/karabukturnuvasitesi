@@ -8,6 +8,7 @@ import {
   XCircle,
   CheckCircle2,
   Loader2,
+  AlertCircle,
 } from 'lucide-react';
 
 interface TeamInfo {
@@ -18,6 +19,8 @@ interface TeamInfo {
 
 export default function PlayerApplicationPage() {
   const BASVURULAR_KAPALI = false;
+
+  const errorRef = useRef<HTMLDivElement>(null);
 
   const [step, setStep] = useState<'key' | 'form'>('key');
   const [teamKey, setTeamKey] = useState('');
@@ -46,6 +49,7 @@ export default function PlayerApplicationPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldError, setFieldError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
@@ -128,19 +132,23 @@ export default function PlayerApplicationPage() {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setFieldError(null);
 
     if (!kvkkAccepted) {
       setError('Devam etmek için KVKK metnini onaylamanız gerekmektedir.');
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
     if (!files['other_document']) {
       setError('Lütfen taahhütname belgesini yükleyin.');
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
     if (!files['other_document'] && !fileNames['other_document']) {
       setError('Lütfen taahhütname belgesini yükleyin.');
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
@@ -175,7 +183,9 @@ export default function PlayerApplicationPage() {
 
       if (!response.ok) {
         setError(data.error || 'Bir hata oluştu');
+        setFieldError(data.field || null);
         setLoading(false);
+        errorRef.current?.scrollIntoView({ behavior: 'smooth' });
         return;
       }
 
@@ -185,6 +195,7 @@ export default function PlayerApplicationPage() {
       console.error('Error:', err);
       setError('Bir hata oluştu. Lütfen tekrar deneyin.');
       setLoading(false);
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -285,9 +296,28 @@ export default function PlayerApplicationPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-4 flex gap-3">
-              <XCircle size={20} className="shrink-0 mt-0.5" />
-              <p className="text-sm">{error}</p>
+            <div
+              ref={errorRef}
+              className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-5"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/30 shrink-0 flex items-center justify-center">
+                  <AlertCircle size={20} className="text-red-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-red-400 font-bold text-base">Başvuru Oluşturulamadı</p>
+                  <p className="text-red-300 text-sm mt-1 leading-relaxed">{error}</p>
+                  
+                  <div className="mt-3 pt-3 border-t border-red-500/20">
+                    <p className="text-red-400 text-xs font-medium">Sorun devam ederse:</p>
+                    <div className="text-red-300 text-xs mt-1 space-y-1">
+                      <div>• Sayfayı yenileyip tekrar deneyin</div>
+                      <div>• Farklı bir tarayıcı deneyin</div>
+                      <div>• Yönetici ile iletişime geçin</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -352,9 +382,28 @@ export default function PlayerApplicationPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-4 flex gap-3">
-            <XCircle size={20} className="shrink-0 mt-0.5" />
-            <p className="text-sm">{error}</p>
+          <div
+            ref={errorRef}
+            className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-5"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/30 shrink-0 flex items-center justify-center">
+                <AlertCircle size={20} className="text-red-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-red-400 font-bold text-base">Başvuru Oluşturulamadı</p>
+                <p className="text-red-300 text-sm mt-1 leading-relaxed">{error}</p>
+                
+                <div className="mt-3 pt-3 border-t border-red-500/20">
+                  <p className="text-red-400 text-xs font-medium">Sorun devam ederse:</p>
+                  <div className="text-red-300 text-xs mt-1 space-y-1">
+                    <div>• Sayfayı yenileyip tekrar deneyin</div>
+                    <div>• Farklı bir tarayıcı deneyin</div>
+                    <div>• Yönetici ile iletişime geçin</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

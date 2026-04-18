@@ -36,73 +36,6 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    // Validate required form fields
-    const requiredFields = [
-      'first_name',
-      'last_name',
-      'phone',
-      'email',
-      'institution',
-      'jersey_number',
-      'team_id',
-    ];
-
-    for (const field of requiredFields) {
-      if (!formData.get(field)) {
-        return NextResponse.json(
-          { error: `${field} alanı zorunludur` },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Validate other_document is provided
-    const otherDocument = formData.get('other_document') as File | null;
-    if (!otherDocument || otherDocument.size === 0) {
-      return NextResponse.json(
-        { error: 'Taahhütname belgesi zorunludur' },
-        { status: 400 }
-      );
-    }
-
-    // Validate all files (required and optional)
-    const allFileFields = [...REQUIRED_FILES, ...OPTIONAL_FILES];
-    const files: Record<string, File> = {};
-
-    for (const fileField of allFileFields) {
-      const file = formData.get(fileField) as File | null;
-
-      if (!file && REQUIRED_FILES.includes(fileField)) {
-        return NextResponse.json(
-          { error: 'Geçersiz dosya formatı veya boyutu' },
-          { status: 400 }
-        );
-      }
-
-      if (file) {
-        // Validate MIME type
-        if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-          return NextResponse.json(
-            { error: 'Geçersiz dosya formatı veya boyutu' },
-            { status: 400 }
-          );
-        }
-
-        // Validate file size
-        if (file.size > MAX_FILE_SIZE) {
-          return NextResponse.json(
-            { error: 'Geçersiz dosya formatı veya boyutu' },
-            { status: 400 }
-          );
-        }
-
-        files[fileField] = file;
-      }
-    }
-
-    // Create Supabase service client
-    const supabase = createServiceClient();
-
     // Get form data
     const firstName = formData.get('first_name') as string;
     const lastName = formData.get('last_name') as string;
@@ -113,6 +46,117 @@ export async function POST(request: NextRequest) {
     const jerseyNumber = formData.get('jersey_number') as string;
     const teamId = formData.get('team_id') as string;
 
+    // Validations
+    if (!firstName || firstName.trim() === '') {
+      return NextResponse.json(
+        { error: 'Ad alanı zorunludur. Lütfen adınızı girin.', field: 'first_name' },
+        { status: 400 }
+      );
+    }
+
+    if (!lastName || lastName.trim() === '') {
+      return NextResponse.json(
+        { error: 'Soyad alanı zorunludur. Lütfen soyadınızı girin.', field: 'last_name' },
+        { status: 400 }
+      );
+    }
+
+    if (!phone || phone.trim() === '') {
+      return NextResponse.json(
+        { error: 'Geçerli bir telefon numarası giriniz.', field: 'phone' },
+        { status: 400 }
+      );
+    }
+
+    if (!email || email.trim() === '') {
+      return NextResponse.json(
+        { error: 'Geçerli bir e-posta adresi giriniz.', field: 'email' },
+        { status: 400 }
+      );
+    }
+
+    if (!institution || institution.trim() === '') {
+      return NextResponse.json(
+        { error: 'Kurum adı zorunludur. Çalıştığınız kurumun adını girin.', field: 'institution' },
+        { status: 400 }
+      );
+    }
+
+    if (!jerseyNumber) {
+      return NextResponse.json(
+        { error: 'Forma numarası 1 ile 99 arasında olmalıdır.', field: 'jersey_number' },
+        { status: 400 }
+      );
+    }
+
+    const jerseyNum = parseInt(jerseyNumber, 10);
+    if (isNaN(jerseyNum) || jerseyNum < 1 || jerseyNum > 99) {
+      return NextResponse.json(
+        { error: 'Forma numarası 1 ile 99 arasında olmalıdır.', field: 'jersey_number' },
+        { status: 400 }
+      );
+    }
+
+    if (tcNo && tcNo.trim() !== '' && tcNo.length !== 11) {
+      return NextResponse.json(
+        { error: 'TC kimlik numarası 11 haneli olmalıdır.', field: 'tc_no' },
+        { status: 400 }
+      );
+    }
+
+    // Check required files
+    const fileChecks: Record<string, { label: string; field: string }> = {
+      tc_front: { label: 'TC Kimlik Ön Yüz', field: 'tc_front' },
+      tc_back: { label: 'TC Kimlik Arka Yüz', field: 'tc_back' },
+      work_certificate: { label: 'Çalışma Belgesi', field: 'work_certificate' },
+      sgk_certificate: { label: 'SGK Belgesi', field: 'sgk_certificate' },
+      passport_photo: { label: 'Vesikalık Fotoğraf', field: 'passport_photo' },
+      other_document: { label: 'Taahhütname', field: 'other_document' },
+    };
+
+    const files: Record<string, File> = {};
+
+    for (const [fileField, { label }] of Object.entries(fileChecks)) {
+      const file = formData.get(fileField) as File | null;
+
+      if (!file || file.size === 0) {
+        const errorMessages: Record<string, string> = {
+          tc_front: 'TC Kimlik Ön Yüz belgesi zorunludur. Lütfen kimliğinizin ön yüzünü yükleyin.',
+          tc_back: 'TC Kimlik Arka Yüz belgesi zorunludur. Lütfen kimliğinizin arka yüzünü yükleyin.',
+          work_certificate: 'Çalışma belgesi zorunludur. Kurumunuzdan aldığınız çalışma belgesini yükleyin.',
+          sgk_certificate: 'SGK belgesi zorunludur. SGK hizmet dökümünüzü yükleyin.',
+          passport_photo: 'Vesikalık fotoğraf zorunludur. Güncel vesikalık fotoğrafınızı yükleyin.',
+          other_document: 'Taahhütname zorunludur. İmzalı taahhütnameyi taratarak yükleyin.',
+        };
+
+        return NextResponse.json(
+          { error: errorMessages[fileField] || `${label} belgesi zorunludur.`, field: fileField },
+          { status: 400 }
+        );
+      }
+
+      // Validate MIME type
+      if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+        return NextResponse.json(
+          { error: `${label}: Geçersiz dosya formatı. Yalnızca PDF, JPG veya PNG yükleyebilirsiniz.`, field: 'file_format' },
+          { status: 400 }
+        );
+      }
+
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: `${label}: Dosya boyutu 5 MB limitini aşıyor. Daha küçük bir dosya yükleyin.`, field: 'file_size' },
+          { status: 400 }
+        );
+      }
+
+      files[fileField] = file;
+    }
+
+    // Create Supabase service client
+    const supabase = createServiceClient();
+
     // Fetch team by team_id
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
@@ -122,7 +166,7 @@ export async function POST(request: NextRequest) {
 
     if (teamError || !teamData) {
       return NextResponse.json(
-        { error: 'Takım bulunamadı' },
+        { error: 'Geçersiz takım anahtarı. Lütfen takım sorumlusundan aldığınız anahtarı kontrol edin.', field: 'team_key' },
         { status: 404 }
       );
     }
@@ -130,9 +174,7 @@ export async function POST(request: NextRequest) {
     // Check if team is approved
     if (teamData.status === 'approved') {
       return NextResponse.json(
-        {
-          error: 'Bu takımın başvurusu onaylanmıştır, yeni oyuncu kabul edilemiyor',
-        },
+        { error: 'Bu takımın başvurusu onaylanmıştır. Yeni oyuncu kaydı kabul edilememektedir.', field: 'team' },
         { status: 400 }
       );
     }
@@ -146,17 +188,16 @@ export async function POST(request: NextRequest) {
     if (playersError) {
       console.error('Players count error:', playersError);
       return NextResponse.json(
-        { error: 'Başvuru sırasında bir hata oluştu' },
+        { error: 'Kayıt oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin. Sorun devam ederse yönetici ile iletişime geçin.', field: 'database' },
         { status: 500 }
       );
     }
 
     const playerCount = playersData?.length || 0;
-    const totalMembers = playerCount;
 
-    if (totalMembers >= 15) {
+    if (playerCount >= 15) {
       return NextResponse.json(
-        { error: 'Takım kontenjanı dolmuştur' },
+        { error: 'Bu takımın kontenjanı dolmuştur. Maksimum 15 oyuncuya ulaşılmıştır.', field: 'team' },
         { status: 400 }
       );
     }
@@ -168,11 +209,11 @@ export async function POST(request: NextRequest) {
         team_id: teamId,
         first_name: firstName,
         last_name: lastName,
-        tc_no: tcNo,
+        tc_no: tcNo || null,
         phone,
         email,
         institution,
-        jersey_number: parseInt(jerseyNumber, 10),
+        jersey_number: jerseyNum,
       })
       .select('id')
       .single();
@@ -180,7 +221,7 @@ export async function POST(request: NextRequest) {
     if (playerError || !playerData) {
       console.error('Players insert error:', playerError);
       return NextResponse.json(
-        { error: 'Başvuru sırasında bir hata oluştu' },
+        { error: 'Kayıt oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin. Sorun devam ederse yönetici ile iletişime geçin.', field: 'database' },
         { status: 500 }
       );
     }
@@ -192,7 +233,7 @@ export async function POST(request: NextRequest) {
       try {
         const timestamp = Date.now();
         const mappedDocumentType = DOCUMENT_TYPE_MAP[documentType];
-        const sanitizedName = sanitizeFileName(file.name)
+        const sanitizedName = sanitizeFileName(file.name);
         const filePath = `teams/${teamId}/players/${playerId}/${mappedDocumentType}/${timestamp}-${sanitizedName}`;
 
         // Upload to Supabase Storage
@@ -205,8 +246,10 @@ export async function POST(request: NextRequest) {
 
         if (uploadError) {
           console.error('File upload error:', uploadError);
+          const fileChecksReverse = Object.entries(fileChecks).find(([key]) => key === documentType);
+          const label = fileChecksReverse ? fileChecksReverse[1].label : 'Dosya';
           return NextResponse.json(
-            { error: 'Başvuru sırasında bir hata oluştu' },
+            { error: `${label} yüklenirken bir sorun oluştu. İnternet bağlantınızı kontrol edip tekrar deneyin.`, field: 'upload' },
             { status: 500 }
           );
         }
@@ -228,14 +271,14 @@ export async function POST(request: NextRequest) {
         if (docError) {
           console.error('Document record insert error:', docError);
           return NextResponse.json(
-            { error: 'Başvuru sırasında bir hata oluştu' },
+            { error: 'Kayıt oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin. Sorun devam ederse yönetici ile iletişime geçin.', field: 'database' },
             { status: 500 }
           );
         }
       } catch (err) {
         console.error('File processing error:', err);
         return NextResponse.json(
-          { error: 'Başvuru sırasında bir hata oluştu' },
+          { error: 'Kayıt oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin. Sorun devam ederse yönetici ile iletişime geçin.', field: 'database' },
           { status: 500 }
         );
       }
@@ -245,8 +288,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(
-      { error: 'Başvuru sırasında bir hata oluştu' },
+      { error: 'Kayıt oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin. Sorun devam ederse yönetici ile iletişime geçin.', field: 'database' },
       { status: 500 }
     );
   }
-}
