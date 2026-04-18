@@ -6,6 +6,7 @@ import AdminKarar from '@/components/AdminKarar';
 import TakimSil from '@/components/TakimSil';
 import BelgeButonlari from '@/components/BelgeButonlari';
 import TeamKeyDisplay from '@/components/TeamKeyDisplay';
+import GizliIcerik from '@/components/GizliIcerik';
 import {
   Shield,
   FileText,
@@ -267,13 +268,10 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
                   <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
                   <p className="text-white font-medium">{teamData.responsible1_name}</p>
                 </div>
-                <div>
-                  <p className="text-gray-400 text-xs mb-1">Telefon</p>
-                  <p className="text-white font-medium">{teamData.responsible1_phone}</p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs mb-1">E-posta</p>
-                  <p className="text-white font-medium text-sm break-all">{teamData.responsible1_email}</p>
+                <div className="col-span-2">
+                  <p className="text-gray-400 text-xs text-center">
+                    (Telefon ve E-posta gizli içerikte)
+                  </p>
                 </div>
               </div>
             </div>
@@ -289,134 +287,179 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
                   <p className="text-gray-400 text-xs mb-1">Ad Soyad</p>
                   <p className="text-white font-medium">{teamData.responsible2_name}</p>
                 </div>
-                <div>
-                  <p className="text-gray-400 text-xs mb-1">Telefon</p>
-                  <p className="text-white font-medium">{teamData.responsible2_phone}</p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs mb-1">E-posta</p>
-                  <p className="text-white font-medium text-sm break-all">{teamData.responsible2_email}</p>
+                <div className="col-span-2">
+                  <p className="text-gray-400 text-xs text-center">
+                    (Telefon ve E-posta gizli içerikte)
+                  </p>
                 </div>
               </div>
             </div>
           ) : null}
 
-          {/* Payment Receipt Section */}
-          <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
-
-          <div className="flex items-center gap-2 mb-3">
-            <FileText size={16} style={{ color: '#f0a500' }} />
-            <p className="text-white font-medium">Ödeme Dekontu</p>
-          </div>
-
-          {teamReceipt ? (
-            <div
-              style={{
-                backgroundColor: '#0d1f12',
-                borderColor: '#2d4a32',
-              }}
-              className="border rounded-xl p-4 hover:border-[#f0a500]/30 transition-colors"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-start gap-2 min-w-0 flex-1">
-                  <File
-                    size={18}
-                    style={{ color: '#f0a500' }}
-                    className="shrink-0 mt-0.5"
-                  />
-                  <div className="min-w-0">
-                    <p className="text-white text-sm font-medium">
-                      Banka Dekontu
-                    </p>
-                    <p className="text-gray-400 text-xs truncate mt-0.5">
-                      {teamReceipt.file_name}
-                    </p>
-                    <p className="text-gray-500 text-xs mt-1">
-                      {Math.round(teamReceipt.file_size / 1024)} KB
-                    </p>
-                  </div>
-                </div>
-                <div className="shrink-0">
-                  <BelgeButonlari
-                    filePath={teamReceipt.file_path}
-                    fileName={teamReceipt.file_name}
-                  />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                backgroundColor: '#0d1f12',
-                borderColor: '#2d4a32',
-              }}
-              className="border rounded-xl p-3"
-            >
-              <div className="flex items-center gap-2">
-                <AlertCircle size={14} className="text-yellow-400" />
-                <p className="text-gray-400 text-sm">Henüz dekont yüklenmemiştir.</p>
-              </div>
-            </div>
-          )}
-
-          {/* No Responsibles Message */}
           {!teamData.responsible1_name && !teamData.responsible2_name && (
             <p className="text-gray-400 text-sm">Takım sorumlusu bilgisi girilmemiştir.</p>
           )}
         </div>
 
-        {/* Players List */}
-        {playersData.length > 0 ? (
-          <div
-            style={{
-              backgroundColor: '#1a2e1d',
-              borderColor: '#2d4a32',
-            }}
-            className="border rounded-2xl p-6 mb-6"
-          >
-            {/* Card Header */}
-            <div className="flex items-center gap-3 mb-4">
-              <Users size={20} style={{ color: '#f0a500' }} />
-              <h2 className="text-white font-semibold text-lg">Oyuncular</h2>
-              <span
-                style={{
-                  backgroundColor: '#f0a500/20',
-                  color: '#f0a500',
-                }}
-                className="text-xs px-2 py-0.5 rounded-full"
-              >
-                {playersData.length} kişi
-              </span>
+        {/* Gizli İçerik Bloğu */}
+        <GizliIcerik>
+          <div className="space-y-6 mb-6">
+            {/* Gizli Sorumlu Bilgileri */}
+            <div
+              style={{
+                backgroundColor: '#1a2e1d',
+                borderColor: '#2d4a32',
+              }}
+              className="border rounded-2xl p-6"
+            >
+              <h3 className="text-white font-semibold text-lg mb-4">Hassas Bilgiler</h3>
+
+              {/* Birinci Sorumlu Detayları */}
+              {teamData.responsible1_name ? (
+                <div className="mb-6">
+                  <p className="text-gray-400 text-xs mb-3 font-medium">Birinci Sorumlu</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-gray-400 text-xs mb-1">Telefon</p>
+                      <p className="text-white font-medium">{teamData.responsible1_phone}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs mb-1">E-posta</p>
+                      <p className="text-white font-medium text-sm break-all">{teamData.responsible1_email}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* İkinci Sorumlu Detayları */}
+              {teamData.responsible2_name ? (
+                <div>
+                  {teamData.responsible1_name && <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />}
+                  <p className="text-gray-400 text-xs mb-3 font-medium">İkinci Sorumlu</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-gray-400 text-xs mb-1">Telefon</p>
+                      <p className="text-white font-medium">{teamData.responsible2_phone}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs mb-1">E-posta</p>
+                      <p className="text-white font-medium text-sm break-all">{teamData.responsible2_email}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Payment Receipt */}
+              <div style={{ borderColor: '#2d4a32' }} className="border-t my-4" />
+              <div className="flex items-center gap-2 mb-3">
+                <FileText size={16} style={{ color: '#f0a500' }} />
+                <p className="text-white font-medium">Ödeme Dekontu</p>
+              </div>
+              {teamReceipt ? (
+                <div
+                  style={{
+                    backgroundColor: '#0d1f12',
+                    borderColor: '#2d4a32',
+                  }}
+                  className="border rounded-xl p-4 hover:border-[#f0a500]/30 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-2 min-w-0 flex-1">
+                      <File
+                        size={18}
+                        style={{ color: '#f0a500' }}
+                        className="shrink-0 mt-0.5"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-white text-sm font-medium">
+                          Banka Dekontu
+                        </p>
+                        <p className="text-gray-400 text-xs truncate mt-0.5">
+                          {teamReceipt.file_name}
+                        </p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          {Math.round(teamReceipt.file_size / 1024)} KB
+                        </p>
+                      </div>
+                    </div>
+                    <div className="shrink-0">
+                      <BelgeButonlari
+                        filePath={teamReceipt.file_path}
+                        fileName={teamReceipt.file_name}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    backgroundColor: '#0d1f12',
+                    borderColor: '#2d4a32',
+                  }}
+                  className="border rounded-xl p-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <AlertCircle size={14} className="text-yellow-400" />
+                    <p className="text-gray-400 text-sm">Henüz dekont yüklenmemiştir.</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Players */}
-            <div className="space-y-2">
-              {playersData.map((player) => (
-                <PlayerCard
-                  key={player.id}
-                  player={player}
-                  documents={documentsData.filter(
-                    (d) =>
-                      d.owner_type === 'player' && d.owner_id === player.id
-                  )}
-                />
-              ))}
-            </div>
+            {/* Players List */}
+            {playersData.length > 0 ? (
+              <div
+                style={{
+                  backgroundColor: '#1a2e1d',
+                  borderColor: '#2d4a32',
+                }}
+                className="border rounded-2xl p-6"
+              >
+                {/* Card Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <Users size={20} style={{ color: '#f0a500' }} />
+                  <h2 className="text-white font-semibold text-lg">Oyuncular</h2>
+                  <span
+                    style={{
+                      backgroundColor: '#f0a500/20',
+                      color: '#f0a500',
+                    }}
+                    className="text-xs px-2 py-0.5 rounded-full"
+                  >
+                    {playersData.length} kişi
+                  </span>
+                </div>
+
+                {/* Players */}
+                <div className="space-y-2">
+                  {playersData.map((player) => (
+                    <PlayerCard
+                      key={player.id}
+                      player={player}
+                      documents={documentsData.filter(
+                        (d) =>
+                          d.owner_type === 'player' && d.owner_id === player.id
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div
+                style={{
+                  backgroundColor: '#1a2e1d',
+                  borderColor: '#2d4a32',
+                }}
+                className="border rounded-2xl p-16 text-center"
+              >
+                <UserX size={32} className="text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400 mt-2">
+                  Henüz oyuncu başvurusu yapılmamıştır.
+                </p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div
-            style={{
-              backgroundColor: '#1a2e1d',
-              borderColor: '#2d4a32',
-            }}
-            className="border rounded-2xl p-16 text-center mb-6"
-          >
-            <UserX size={32} className="text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 mt-2">
-              Henüz oyuncu başvurusu yapılmamıştır.
-            </p>
-          </div>
-        )}
+        </GizliIcerik>
 
         {/* Decision Card */}
         <AdminKarar
