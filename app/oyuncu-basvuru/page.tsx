@@ -10,6 +10,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
+import { uploadFileDirect, sanitizeFileName } from '@/lib/uploadFile';
 
 interface TeamInfo {
   team_id: string;
@@ -48,6 +49,7 @@ export default function PlayerApplicationPage() {
   const [fileNames, setFileNames] = useState<Record<string, string>>({});
 
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -134,68 +136,145 @@ export default function PlayerApplicationPage() {
     setError(null);
     setFieldError(null);
 
-    if (!kvkkAccepted) {
-      setError('Devam etmek için KVKK metnini onaylamanız gerekmektedir.');
-      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
-      return;
+    // Validasyon
+    if (!formData.first_name || !formData.last_name || !formData.phone || 
+        !formData.email || !formData.institution || !formData.jersey_number) {
+      setError('Lütfen tüm zorunlu alanları doldurun.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
     }
 
+    if (!files['tc_front']) {
+      setError('TC Kimlik Ön Yüz belgesi zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!files['tc_back']) {
+      setError('TC Kimlik Arka Yüz belgesi zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!files['work_certificate']) {
+      setError('Çalışma belgesi zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!files['sgk_certificate']) {
+      setError('SGK belgesi zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!files['passport_photo']) {
+      setError('Vesikalık fotoğraf zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
     if (!files['other_document']) {
-      setError('Lütfen taahhütname belgesini yükleyin.');
-      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
-      return;
+      setError('Taahhütname zorunludur.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!kvkkAccepted) {
+      setError('KVKK metnini onaylamanız gerekmektedir.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+      return
     }
 
-    if (!files['other_document'] && !fileNames['other_document']) {
-      setError('Lütfen taahhütname belgesini yükleyin.');
-      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-
-    setLoading(true);
+    setLoading(true)
+    setError(null)
 
     try {
-      const form = new FormData();
-
-      // Append team_id
-      form.append('team_id', teamInfo!.team_id);
-
-      // Append form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) {
-          form.append(key, value);
-        }
-      });
-
-      // Append files
-      Object.entries(files).forEach(([key, file]) => {
-        if (file) {
-          form.append(key, file);
-        }
-      });
-
-      const response = await fetch('/api/oyuncu-basvuru', {
+      // ADIM 1: Oyuncu kaydı oluştur
+      const registerResponse = await fetch('/api/oyuncu-kayit-olustur', {
         method: 'POST',
-        body: form,
-      });
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          team_key: teamKey,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          tc_no: formData.tc_no || null,
+          phone: formData.phone,
+          email: formData.email,
+          institution: formData.institution,
+          jersey_number: parseInt(formData.jersey_number)
+        })
+      })
 
-      const data = await response.json();
+      const registerData = await registerResponse.json()
 
-      if (!response.ok) {
-        setError(data.error || 'Bir hata oluştu');
-        setFieldError(data.field || null);
-        setLoading(false);
-        errorRef.current?.scrollIntoView({ behavior: 'smooth' });
-        return;
+      if (!registerResponse.ok) {
+        setError(registerData.error || 'Kayıt oluşturulamadı')
+        setLoading(false)
+        errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+        return
       }
 
-      setSuccess(true);
-      setLoading(false);
+      const { player_id, team_id } = registerData
+
+      // ADIM 2: Dosyaları direkt Supabase'e yükle
+      const documentTypes = [
+        'tc_front', 'tc_back', 'work_certificate',
+        'sgk_certificate', 'passport_photo', 'other_document'
+      ]
+
+      const uploadedFiles: Array<{
+        document_type: string,
+        file_path: string,
+        file_name: string,
+        file_size: number,
+        mime_type: string
+      }> = []
+
+      for (const docType of documentTypes) {
+        const file = files[docType]
+        if (!file) continue
+
+        const timestamp = Date.now()
+        const sanitized = sanitizeFileName(file.name)
+        const path = `teams/${team_id}/players/${player_id}/${docType}/${timestamp}-${sanitized}`
+
+        setLoadingMessage(`${docType} yükleniyor...`)
+
+        await uploadFileDirect(file, path)
+
+        uploadedFiles.push({
+          document_type: docType === 'other_document' ? 'other' : docType,
+          file_path: path,
+          file_name: file.name,
+          file_size: file.size,
+          mime_type: file.type
+        })
+      }
+
+      // ADIM 3: Belge kayıtlarını oluştur
+      const docsResponse = await fetch('/api/oyuncu-belge-kaydet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          player_id,
+          team_id,
+          documents: uploadedFiles
+        })
+      })
+
+      if (!docsResponse.ok) {
+        const docsData = await docsResponse.json()
+        setError(docsData.error || 'Belgeler kaydedilemedi')
+        setLoading(false)
+        setLoadingMessage(null)
+        errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+        return
+      }
+
+      setSuccess(true)
+
     } catch (err) {
-      console.error('Error:', err);
-      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
-      setLoading(false);
-      errorRef.current?.scrollIntoView({ behavior: 'smooth' });
+      console.error(err)
+      setError('Bir hata oluştu. Lütfen tekrar deneyin.')
+      errorRef.current?.scrollIntoView({ behavior: 'smooth' })
+    } finally {
+      setLoading(false)
+      setLoadingMessage(null)
     }
   };
 
@@ -654,7 +733,7 @@ export default function PlayerApplicationPage() {
             {loading ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
-                Gönderiliyor...
+                {loadingMessage || 'Gönderiliyor...'}
               </>
             ) : (
               'Başvuruyu Gönder'
