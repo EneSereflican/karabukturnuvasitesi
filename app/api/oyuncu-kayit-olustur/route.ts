@@ -120,7 +120,6 @@ export async function POST(request: NextRequest) {
         email,
         institution,
         jersey_number,
-        status: 'pending',
       })
       .select('id')
       .single();
