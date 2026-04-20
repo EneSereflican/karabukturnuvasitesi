@@ -20,8 +20,6 @@ export default function IlkOnBirOlusturPage() {
   const [authStep, setAuthStep] = useState<'auth' | 'form'>('auth')
   const [identifier, setIdentifier] = useState('')
   const [authError, setAuthError] = useState<string | null>(null)
-  const [authLoading, setAuthLoading] = useState(false)
-  const [personName, setPersonName] = useState<string | null>(null)
 
   // Players & lineup state
   const [players, setPlayers] = useState<Player[]>([])
@@ -69,28 +67,13 @@ export default function IlkOnBirOlusturPage() {
     }
   }
 
-  const handleAuth = async () => {
-    setAuthError(null)
-    setAuthLoading(true)
-    try {
-      const res = await fetch('/api/oyuncu-bul', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team_key: '', identifier })
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setAuthError(data.error || 'Kimlik doğrulanamadı')
-        setAuthLoading(false)
-        return
-      }
-      setPersonName(data.player_name)
-      setAuthStep('form')
-    } catch {
-      setAuthError('Bir hata oluştu')
-    } finally {
-      setAuthLoading(false)
+  const handleAuth = () => {
+    if (!identifier.trim()) {
+      setAuthError('Lütfen kimlik bilgisi girin')
+      return
     }
+    setAuthError(null)
+    setAuthStep('form')
   }
 
   const handlePlayerToggle = (playerId: string) => {
@@ -150,6 +133,12 @@ export default function IlkOnBirOlusturPage() {
       })
       const data = await res.json()
       if (!res.ok) {
+        if (data.error === 'Bu bilgi ile takımda kayıtlı kişi bulunamadı') {
+          setAuthError(data.error)
+          setAuthStep('auth')
+          setLoading(false)
+          return
+        }
         setError(data.error || 'Kayıt başarısız')
         setLoading(false)
         return
@@ -216,10 +205,10 @@ export default function IlkOnBirOlusturPage() {
 
             <button
               onClick={handleAuth}
-              disabled={authLoading || !identifier}
-              className="w-full bg-[#f0a500] text-[#0d1f12] font-bold h-11 rounded-xl hover:bg-[#f0a500]/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+              disabled={!identifier}
+              className="w-full bg-[#f0a500] text-[#0d1f12] font-bold h-11 rounded-xl hover:bg-[#f0a500]/90 disabled:opacity-50 transition-colors"
             >
-              {authLoading ? <><Loader2 size={18} className="animate-spin" /> Kontrol ediliyor...</> : 'Devam Et'}
+              Devam Et
             </button>
           </div>
         </div>
@@ -236,7 +225,7 @@ export default function IlkOnBirOlusturPage() {
 
         <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8">
           <h1 className="text-white text-2xl font-bold mb-2">İlk 11 Oluştur</h1>
-          <p className="text-gray-400 text-sm mb-6">Merhaba {personName}! Formasyon ve oyuncuları seçin.</p>
+          <p className="text-gray-400 text-sm mb-6">Formasyon ve oyuncuları seçin.</p>
 
           {error && (
             <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
