@@ -29,13 +29,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (team.status !== 'rejected') {
-      return NextResponse.json(
-        { error: 'Bu takımın başvurusu reddedilmemiş' },
-        { status: 400 }
-      );
-    }
-
     // Determine if identifier is email or TC ID
     const isEmail = identifier.includes('@');
 
