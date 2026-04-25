@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,18 +8,7 @@ import { Lock, Calendar, Trophy, Play, Shield, BarChart2, Bell, Sparkles } from 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#0d1f12] text-white relative">
-      <div
-        className="absolute inset-0 md:hidden"
-        style={{
-          backgroundImage: "url('/mobile-bg.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.15,
-          zIndex: 0,
-        }}
-      />
-      <div className="relative z-10">
+
       {/* Navbar */}
       <nav className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[#1a472a]" style={{ backgroundColor: 'rgba(13, 31, 18, 0.8)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -71,8 +62,22 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20" style={{ backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.75), rgba(13, 31, 18, 0.85)), url(/foto-taraftarlar.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
-        <div className="text-center space-y-8 max-w-4xl">
+      <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 relative">
+        {/* Masaüstü arka plan */}
+        <div className="absolute inset-0 hidden md:block" style={{
+          backgroundImage: 'linear-gradient(rgba(13, 31, 18, 0.75), rgba(13, 31, 18, 0.85)), url(/foto-taraftarlar.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }} />
+        {/* Mobil arka plan */}
+        <div className="absolute inset-0 block md:hidden" style={{
+          backgroundImage: "linear-gradient(rgba(13, 31, 18, 0.55), rgba(13, 31, 18, 0.65)), url('/mobile-bg.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }} />
+        {/* İçerik */}
+        <div className="relative z-10 text-center space-y-8 max-w-4xl">
           <div style={{
             display: 'inline-block',
             backgroundColor: '#f0a500',
@@ -179,7 +184,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-300">
-                  Karabük'te faaliyet gösteren kamu kurum ve kuruluşları ile sivil toplum kuruluşlarında görev yapan çalışanlar.
+                  Karabük&apos;te faaliyet gösteren kamu kurum ve kuruluşları ile sivil toplum kuruluşlarında görev yapan çalışanlar.
                 </p>
               </CardContent>
             </Card>
@@ -417,6 +422,5 @@ export default function Home() {
         </div>
       </footer>
       </div>
-    </div>
   );
 }
