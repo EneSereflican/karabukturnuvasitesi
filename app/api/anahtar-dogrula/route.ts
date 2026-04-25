@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     // Fetch team by team_key
     const { data: team, error: teamError } = await supabase
       .from('teams')
-      .select('id, name, institution, status')
+      .select('id, name, institution, status, max_players')
       .eq('team_key', team_key)
       .single();
 
@@ -58,7 +58,8 @@ export async function POST(request: NextRequest) {
     // totalMembers includes players only
     const totalMembers = count || 0;
 
-    if (totalMembers >= 15) {
+    const maxPlayers = team.max_players ?? 15;
+    if (totalMembers >= maxPlayers) {
       return NextResponse.json(
         { error: 'Takım kontenjanı dolmuştur' },
         { status: 400 }
