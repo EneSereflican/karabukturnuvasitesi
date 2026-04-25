@@ -5,7 +5,19 @@ import { Lock, Calendar, Trophy, Play, Shield, BarChart2, Bell, Sparkles } from 
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0d1f12] text-white">
+    <div className="min-h-screen bg-[#0d1f12] text-white relative">
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          backgroundImage: "url('/mobile-bg.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.15,
+          zIndex: 0,
+        }}
+      />
+      <div className="relative z-10">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[#1a472a]" style={{ backgroundColor: 'rgba(13, 31, 18, 0.8)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -404,6 +416,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 }
