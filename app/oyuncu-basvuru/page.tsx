@@ -5,7 +5,6 @@ import { useState, useRef } from 'react';
 import {
   FileText,
   Info,
-  XCircle,
   CheckCircle2,
   Loader2,
   AlertCircle,
@@ -51,7 +50,6 @@ export default function PlayerApplicationPage() {
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [fieldError, setFieldError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
@@ -134,7 +132,6 @@ export default function PlayerApplicationPage() {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-    setFieldError(null);
 
     // Validasyon
     if (!formData.first_name || !formData.last_name || !formData.phone || 
@@ -293,10 +290,10 @@ export default function PlayerApplicationPage() {
             Başvurular geçici olarak kapatılmıştır.
             Bilgi için yönetici ile iletişime geçiniz.
           </p>
-          <a href="/" className="inline-block mt-6 text-[#f0a500] 
+          <Link href="/" className="inline-block mt-6 text-[#f0a500] 
             text-sm hover:underline">
             ← Ana Sayfaya Dön
-          </a>
+          </Link>
         </div>
       </div>
     );
