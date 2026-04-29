@@ -10,6 +10,7 @@ import {
   User,
   ChevronRight,
   ClipboardList,
+  Calendar,
 } from 'lucide-react';
 
 async function getTeamsWithDetails() {
@@ -117,6 +118,26 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <p className="text-gray-400 text-sm">{dateStr}</p>
           </div>
         </div>
+
+        {/* Fikstür Yönetimi Link Card */}
+        <Link href="/admin/fikstir" className="block mb-6">
+          <div className="border border-[#2d4a32] hover:border-[#f0a500]/40 rounded-2xl p-5 transition-all"
+            style={{ backgroundColor: '#1a2e1d' }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: 'rgba(240,165,0,0.1)' }}>
+                  <Calendar size={20} className="text-[#f0a500]" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Fikstür Yönetimi</p>
+                  <p className="text-gray-400 text-sm">Maç ekle, skor gir, olay yönet</p>
+                </div>
+              </div>
+              <ChevronRight size={20} className="text-gray-600" />
+            </div>
+          </div>
+        </Link>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

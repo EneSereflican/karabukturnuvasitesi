@@ -31,7 +31,21 @@ export default function AdminLayout({
             </div>
           </Link>
 
-          {/* Right Side - Logout Button */}
+          {/* Right Side - Nav Links + Logout Button */}
+          <div className="flex items-center gap-4 mr-4">
+            <Link 
+              href="/admin" 
+              className="text-gray-400 hover:text-white text-sm transition-colors"
+            >
+              Başvurular
+            </Link>
+            <Link 
+              href="/admin/fikstir" 
+              className="text-gray-400 hover:text-white text-sm transition-colors"
+            >
+              Fikstür Yönetimi
+            </Link>
+          </div>
           <AdminLogoutButton />
         </div>
       </header>
