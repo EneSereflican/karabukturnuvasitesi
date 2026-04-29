@@ -25,6 +25,9 @@ export default function Home() {
           </Link>
 
           <div className="flex gap-1 sm:gap-2 items-center">
+            <Link href="/fikstir" className="hidden md:flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors">Fikstür</Link>
+            <Link href="/puan-durumu" className="hidden md:flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors">Puan Durumu</Link>
+            <Link href="/istatistikler" className="hidden md:flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors">İstatistikler</Link>
             <Link href="/admin/giris" className="hidden md:flex">
               <div className="flex items-center gap-1 text-gray-400 hover:text-gray-300 text-sm transition-colors">
                 <Lock size={14} />
@@ -146,6 +149,14 @@ export default function Home() {
                 Takıma Katıl
               </div>
             </Link>
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center pt-2">
+            <Link href="/fikstir"><span className="text-[#f0a500] text-sm hover:underline">📅 Fikstür</span></Link>
+            <span className="text-gray-600">•</span>
+            <Link href="/puan-durumu"><span className="text-[#f0a500] text-sm hover:underline">🏆 Puan Durumu</span></Link>
+            <span className="text-gray-600">•</span>
+            <Link href="/istatistikler"><span className="text-[#f0a500] text-sm hover:underline">📊 İstatistikler</span></Link>
           </div>
 
           {/* Scroll down indicator */}
@@ -305,32 +316,32 @@ export default function Home() {
         {/* Features Grid */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {/* Card 1: Fikstür */}
-          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
-            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
-              Yakında
-            </span>
-            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
-              <Calendar size={24} className="text-[#f0a500]" />
+          <Link href="/fikstir">
+            <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/60 transition-all relative overflow-hidden group cursor-pointer h-full">
+              <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+                <Calendar size={24} className="text-[#f0a500]" />
+              </div>
+              <h3 className="text-white font-bold text-lg">Fikstür & Maç Takvimi</h3>
+              <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+                Tüm maçların tarih, saat ve lokasyon bilgilerini anlık takip edin.
+              </p>
+              <p className="text-[#f0a500] text-sm mt-3 font-medium">Görüntüle →</p>
             </div>
-            <h3 className="text-white font-bold text-lg">Fikstür & Maç Takvimi</h3>
-            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-              Tüm maçların tarih, saat ve lokasyon bilgilerini anlık takip edin.
-            </p>
-          </div>
+          </Link>
 
           {/* Card 2: Canlı Puan */}
-          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
-            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
-              Yakında
-            </span>
-            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
-              <Trophy size={24} className="text-[#f0a500]" />
+          <Link href="/puan-durumu">
+            <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/60 transition-all relative overflow-hidden group cursor-pointer h-full">
+              <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+                <Trophy size={24} className="text-[#f0a500]" />
+              </div>
+              <h3 className="text-white font-bold text-lg">Canlı Puan Tablosu</h3>
+              <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+                Gruplar ve eleme aşamalarını, takım sıralamalarını gerçek zamanlı görün.
+              </p>
+              <p className="text-[#f0a500] text-sm mt-3 font-medium">Görüntüle →</p>
             </div>
-            <h3 className="text-white font-bold text-lg">Canlı Puan Tablosu</h3>
-            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-              Gruplar ve eleme aşamalarını, takım sıralamalarını gerçek zamanlı görün.
-            </p>
-          </div>
+          </Link>
 
           {/* Card 3: Gol Videoları */}
           <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
@@ -361,18 +372,18 @@ export default function Home() {
           </div>
 
           {/* Card 5: İstatistikler */}
-          <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
-            <span className="absolute top-4 right-4 bg-[#f0a500]/10 text-[#f0a500] text-xs px-2 py-1 rounded-full">
-              Yakında
-            </span>
-            <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
-              <BarChart2 size={24} className="text-[#f0a500]" />
+          <Link href="/istatistikler">
+            <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/60 transition-all relative overflow-hidden group cursor-pointer h-full">
+              <div className="w-12 h-12 rounded-xl bg-[#f0a500]/10 flex items-center justify-center mb-4 group-hover:bg-[#f0a500]/20 transition-colors">
+                <BarChart2 size={24} className="text-[#f0a500]" />
+              </div>
+              <h3 className="text-white font-bold text-lg">Oyuncu İstatistikleri</h3>
+              <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+                Gol krallığı, asist sıralaması, sarı-kırmızı kart tabloları.
+              </p>
+              <p className="text-[#f0a500] text-sm mt-3 font-medium">Görüntüle →</p>
             </div>
-            <h3 className="text-white font-bold text-lg">Oyuncu İstatistikleri</h3>
-            <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-              Gol krallığı, asist sıralaması, sarı-kırmızı kart tabloları.
-            </p>
-          </div>
+          </Link>
 
           {/* Card 6: Bildirimler */}
           <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-6 hover:border-[#f0a500]/40 transition-all relative overflow-hidden group">
@@ -417,6 +428,18 @@ export default function Home() {
             <div className="hidden sm:block w-px h-6 bg-[#1a472a]" />
             <Link href="/basvuru-durumlari" className="text-[#f0a500] hover:text-[#e09500] transition-colors">
               Başvuru Durumları
+            </Link>
+            <div className="hidden sm:block w-px h-6 bg-[#1a472a]" />
+            <Link href="/fikstir" className="text-[#f0a500] hover:text-[#e09500] transition-colors">
+              Fikstür
+            </Link>
+            <div className="hidden sm:block w-px h-6 bg-[#1a472a]" />
+            <Link href="/puan-durumu" className="text-[#f0a500] hover:text-[#e09500] transition-colors">
+              Puan Durumu
+            </Link>
+            <div className="hidden sm:block w-px h-6 bg-[#1a472a]" />
+            <Link href="/istatistikler" className="text-[#f0a500] hover:text-[#e09500] transition-colors">
+              İstatistikler
             </Link>
           </div>
         </div>
