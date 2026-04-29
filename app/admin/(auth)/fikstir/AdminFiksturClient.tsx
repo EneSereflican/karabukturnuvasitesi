@@ -99,7 +99,11 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
     if (!confirm('Bu maçı silmek istediğinize emin misiniz?')) return;
     try {
       const res = await fetch('/api/mac-sil', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ match_id: matchId }) });
-      if (res.ok) { setDeleteError(null); router.refresh(); }
+      if (res.ok) {
+        setDeleteError(null);
+        router.refresh();
+        window.location.reload();
+      }
       else { const d = await res.json(); setDeleteError(d.error || 'Maç silinirken hata oluştu.'); }
     } catch {
       setDeleteError('Sunucuya bağlanılamadı.');
