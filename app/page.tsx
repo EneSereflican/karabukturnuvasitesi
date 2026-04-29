@@ -141,8 +141,12 @@ export default async function Home() {
             </Link>
           </div>
 
-          {/* Right: Buttons */}
+          {/* Right: Admin + Buttons */}
           <div className="flex gap-2 items-center">
+            <Link href="/admin/giris" className="hidden md:flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors">
+              <Lock size={14} />
+              Admin
+            </Link>
             <Link href="/basvuru/kaptan">
               <Button className="bg-[#f0a500] text-[#0d1f12] hover:bg-[#e09500] px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium">
                 Takım Oluştur
@@ -217,7 +221,8 @@ export default async function Home() {
             <Link href="/fikstir">
               <Button
                 variant="outline"
-                className="border border-white text-white hover:bg-white/10 font-medium gap-2"
+                className="bg-transparent border-2 border-white text-white hover:bg-white/20 font-medium gap-2"
+                style={{ color: 'white', borderColor: 'white' }}
               >
                 <Calendar size={18} />
                 Fikstür
@@ -226,7 +231,8 @@ export default async function Home() {
             <Link href="/istatistikler">
               <Button
                 variant="outline"
-                className="border border-white text-white hover:bg-white/10 font-medium gap-2"
+                className="bg-transparent border-2 border-white text-white hover:bg-white/20 font-medium gap-2"
+                style={{ color: 'white', borderColor: 'white' }}
               >
                 <BarChart2 size={18} />
                 İstatistikler
@@ -359,12 +365,12 @@ export default async function Home() {
             {/* Photo 3 */}
             <div className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer">
               <img
-                src="/saha.jpg"
+                src="/foto-taraftarlar.jpeg"
                 alt="Taraftarlarımız"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                <h3 className="text-white font-semibold text-lg">Taraftarlarımız</h3>
+                <h3 className="text-white font-semibold text-lg">Karabük'ün Coşkusu</h3>
               </div>
             </div>
           </div>
