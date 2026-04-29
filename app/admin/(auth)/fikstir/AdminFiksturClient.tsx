@@ -61,7 +61,14 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
       const body: Record<string, string | number> = { home_team_id: homeTeamId, away_team_id: awayTeamId, week };
       if (matchDate) body.match_date = matchDate;
       const res = await fetch('/api/mac-ekle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (res.ok) { setHomeTeamId(''); setAwayTeamId(''); setWeek(1); setMatchDate(''); setAddMatchError(null); router.refresh(); }
+      if (res.ok) {
+        setAddMatchError(null);
+        setHomeTeamId('');
+        setAwayTeamId('');
+        setWeek(1);
+        setMatchDate('');
+        window.location.reload();
+      }
       else {
         const d = await res.json();
         if (d.error && (d.error.includes('duplicate') || d.error.includes('already exists'))) {

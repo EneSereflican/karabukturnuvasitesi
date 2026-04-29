@@ -2,6 +2,8 @@ import { createServiceClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import AdminFiksturClient from './AdminFiksturClient';
 
+export const dynamic = 'force-dynamic';
+
 type Team = {
   id: string;
   name: string;
