@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 interface Team { id: string; name: string; }
 interface MatchEvent {
   id: string; event_type: string; minute: number;
-  player_id: string; team_id: string; player_name: string | null;
+  player_id: string | null; team_id: string; player_name: string | null;
 }
 interface Match {
-  id: string; week: number; match_date: string; status: string;
+  id: string; week: number; match_date: string | null; status: string;
   home_score: number | null; away_score: number | null;
   home_team: Team; away_team: Team; events: MatchEvent[];
 }
@@ -43,40 +43,67 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [addingEvent, setAddingEvent] = useState(false);
 
+  // Hata state
+  const [addMatchError, setAddMatchError] = useState<string | null>(null);
+  const [scoreError, setScoreError] = useState<string | null>(null);
+  const [eventError, setEventError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   // Maç ekle
   const handleAddMatch = async () => {
-    if (!homeTeamId || !awayTeamId || !week) return;
-    if (homeTeamId === awayTeamId) { alert('Aynı takım seçilemez'); return; }
+    setAddMatchError(null);
+    if (!homeTeamId) { setAddMatchError('Lütfen ev sahibi takımı seçin.'); return; }
+    if (!awayTeamId) { setAddMatchError('Lütfen deplasman takımını seçin.'); return; }
+    if (homeTeamId === awayTeamId) { setAddMatchError('Ev sahibi ve deplasman takımı aynı olamaz.'); return; }
+    if (week < 1) { setAddMatchError('Hafta numarası 1 veya daha büyük olmalıdır.'); return; }
     setAdding(true);
     try {
-      const body: any = { home_team_id: homeTeamId, away_team_id: awayTeamId, week };
+      const body: Record<string, string | number> = { home_team_id: homeTeamId, away_team_id: awayTeamId, week };
       if (matchDate) body.match_date = matchDate;
       const res = await fetch('/api/mac-ekle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (res.ok) { setHomeTeamId(''); setAwayTeamId(''); setWeek(1); setMatchDate(''); router.refresh(); }
-      else { const d = await res.json(); alert(d.error || 'Hata'); }
-    } catch { alert('Sunucu hatası'); }
+      if (res.ok) { setHomeTeamId(''); setAwayTeamId(''); setWeek(1); setMatchDate(''); setAddMatchError(null); router.refresh(); }
+      else {
+        const d = await res.json();
+        if (d.error && (d.error.includes('duplicate') || d.error.includes('already exists'))) {
+          setAddMatchError('Bu hafta bu iki takım arasında zaten maç mevcut.');
+        } else {
+          setAddMatchError(d.error || 'Maç eklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        }
+      }
+    } catch {
+      setAddMatchError('Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.');
+    }
     finally { setAdding(false); }
   };
 
   // Skor kaydet
   const handleSaveScore = async (matchId: string) => {
+    setScoreError(null);
+    if (editHomeScore < 0) { setScoreError('Ev sahibi skoru 0\'dan küçük olamaz.'); return; }
+    if (editAwayScore < 0) { setScoreError('Deplasman skoru 0\'dan küçük olamaz.'); return; }
+    if (editHomeScore > 20 || editAwayScore > 20) { setScoreError('Skor 20\'den büyük olamaz. Lütfen kontrol edin.'); return; }
     setSaving(true);
     try {
       const res = await fetch('/api/mac-guncelle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ match_id: matchId, home_score: editHomeScore, away_score: editAwayScore, status: 'completed' }) });
-      if (res.ok) { setEditingMatchId(null); router.refresh(); }
-      else { const d = await res.json(); alert(d.error || 'Hata'); }
-    } catch { alert('Sunucu hatası'); }
+      if (res.ok) { setEditingMatchId(null); setScoreError(null); router.refresh(); }
+      else { const d = await res.json(); setScoreError(d.error || 'Skor kaydedilirken hata oluştu.'); }
+    } catch {
+      setScoreError('Sunucuya bağlanılamadı.');
+    }
     finally { setSaving(false); }
   };
 
   // Maç sil
   const handleDeleteMatch = async (matchId: string) => {
+    setDeleteError(null);
     if (!confirm('Bu maçı silmek istediğinize emin misiniz?')) return;
     try {
       const res = await fetch('/api/mac-sil', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ match_id: matchId }) });
-      if (res.ok) router.refresh();
-      else { const d = await res.json(); alert(d.error || 'Hata'); }
-    } catch { alert('Sunucu hatası'); }
+      if (res.ok) { setDeleteError(null); router.refresh(); }
+      else { const d = await res.json(); setDeleteError(d.error || 'Maç silinirken hata oluştu.'); }
+    } catch {
+      setDeleteError('Sunucuya bağlanılamadı.');
+    }
   };
 
   // Takım seçilince oyuncuları çek
@@ -96,13 +123,27 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
 
   // Olay ekle
   const handleAddEvent = async (matchId: string) => {
-    if (!eventTeamId || !eventPlayerId || !eventType) return;
+    setEventError(null);
+    if (!eventTeamId) { setEventError('Lütfen bir takım seçin.'); return; }
+    if (!eventPlayerId) { setEventError('Lütfen bir oyuncu seçin.'); return; }
+    if (eventMinute < 1) { setEventError('Dakika 1\'den küçük olamaz.'); return; }
+    if (eventMinute > 120) { setEventError('Dakika 120\'den büyük olamaz.'); return; }
+    if (!eventMinute || isNaN(eventMinute)) { setEventError('Geçerli bir dakika girin (1-120).'); return; }
     setAddingEvent(true);
     try {
       const res = await fetch('/api/mac-olay-ekle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ match_id: matchId, team_id: eventTeamId, player_id: eventPlayerId, event_type: eventType, minute: eventMinute }) });
-      if (res.ok) { setEventPlayerId(''); setEventMinute(1); router.refresh(); }
-      else { const d = await res.json(); alert(d.error || 'Hata'); }
-    } catch { alert('Sunucu hatası'); }
+      if (res.ok) { setEventPlayerId(''); setEventMinute(1); setEventError(null); router.refresh(); }
+      else {
+        const d = await res.json();
+        if (d.error && (d.error.includes('already exists') || d.error.includes('duplicate'))) {
+          setEventError('Bu olay zaten eklenmiş.');
+        } else {
+          setEventError(d.error || 'Olay eklenirken hata oluştu.');
+        }
+      }
+    } catch {
+      setEventError('Sunucuya bağlanılamadı.');
+    }
     finally { setAddingEvent(false); }
   };
 
@@ -151,11 +192,13 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
         <button onClick={handleAddMatch} disabled={adding || !homeTeamId || !awayTeamId} style={{ ...S.btn, ...S.btnPrimary, opacity: adding ? 0.6 : 1, marginTop: 16 }}>
           {adding ? 'Ekleniyor...' : 'Maç Ekle'}
         </button>
+        {addMatchError && <ErrorBox message={addMatchError} />}
       </div>
 
       {/* BÖLÜM 2 — Maç Listesi */}
       <div style={S.card}>
         <h3 style={S.cardTitle}>Maç Listesi</h3>
+        {deleteError && <ErrorBox message={deleteError} />}
         {initialMatches.length === 0 ? (
           <p style={S.empty}>Henüz maç eklenmemiştir.</p>
         ) : (
@@ -209,6 +252,7 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
                       <button onClick={() => handleSaveScore(match.id)} disabled={saving} style={{ ...S.btn, ...S.btnPrimary, ...S.btnSmall }}>
                         {saving ? 'Kaydediliyor...' : 'Kaydet'}
                       </button>
+                      {scoreError && <ErrorBox message={scoreError} />}
                     </div>
                   )}
 
@@ -216,6 +260,7 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
                   {isEventOpen && (
                     <div style={S.eventPanel}>
                       <h4 style={S.eventTitle}>Olay Ekle</h4>
+                      {match.status !== 'completed' && <WarningBox message="Bu maç henüz oynanmadı. Yine de olay ekleyebilirsiniz." />}
                       <div style={S.eventForm}>
                         <select value={eventTeamId} onChange={e => handleEventTeamChange(e.target.value)} style={S.select}>
                           <option value="">Takım seçin</option>
@@ -230,6 +275,7 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
                             </option>
                           ))}
                         </select>
+                        {eventTeamId && eventPlayers.length === 0 && !loadingPlayers && <WarningBox message="Bu takımda kayıtlı oyuncu bulunamadı." />}
                         <select value={eventType} onChange={e => setEventType(e.target.value)} style={S.select}>
                           <option value="goal">⚽ Gol</option>
                           <option value="yellow_card">🟨 Sarı Kart</option>
@@ -240,6 +286,7 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
                           {addingEvent ? '...' : 'Ekle'}
                         </button>
                       </div>
+                      {eventError && <ErrorBox message={eventError} />}
 
                       {/* Mevcut olaylar */}
                       {match.events.length > 0 && (
@@ -264,6 +311,34 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ErrorBox({ message }: { message: string }) {
+  return (
+    <div style={{
+      backgroundColor: 'rgba(229,115,115,0.1)',
+      border: '1px solid rgba(229,115,115,0.3)',
+      borderRadius: 8, padding: '10px 14px', marginTop: 10,
+      display: 'flex', alignItems: 'flex-start', gap: 8
+    }}>
+      <span style={{ color: '#e57373', fontSize: 16, lineHeight: 1.4 }}>⚠</span>
+      <p style={{ color: '#e57373', fontSize: 13, margin: 0, lineHeight: 1.5 }}>{message}</p>
+    </div>
+  );
+}
+
+function WarningBox({ message }: { message: string }) {
+  return (
+    <div style={{
+      backgroundColor: 'rgba(240,165,0,0.1)',
+      border: '1px solid rgba(240,165,0,0.3)',
+      borderRadius: 8, padding: '10px 14px', marginTop: 10,
+      display: 'flex', alignItems: 'flex-start', gap: 8
+    }}>
+      <span style={{ color: '#f0a500', fontSize: 16, lineHeight: 1.4 }}>ℹ</span>
+      <p style={{ color: '#f0a500', fontSize: 13, margin: 0, lineHeight: 1.5 }}>{message}</p>
     </div>
   );
 }
