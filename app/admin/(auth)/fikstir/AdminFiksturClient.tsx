@@ -281,7 +281,10 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
                           <option value="yellow_card">🟨 Sarı Kart</option>
                           <option value="red_card">🟥 Kırmızı Kart</option>
                         </select>
-                        <input type="number" min={1} max={120} value={eventMinute} onChange={e => setEventMinute(Number(e.target.value))} placeholder="Dk" style={{ ...S.input, width: 70 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          <label style={{ ...S.label, fontSize: 10 }}>DAKİKA</label>
+                          <input type="number" min={1} max={120} value={eventMinute} onChange={e => setEventMinute(Number(e.target.value))} placeholder="1-120" style={{ ...S.input, width: 70 }} />
+                        </div>
                         <button onClick={() => handleAddEvent(match.id)} disabled={addingEvent || !eventPlayerId} style={{ ...S.btn, ...S.btnPrimary, ...S.btnSmall, opacity: addingEvent || !eventPlayerId ? 0.5 : 1 }}>
                           {addingEvent ? '...' : 'Ekle'}
                         </button>
