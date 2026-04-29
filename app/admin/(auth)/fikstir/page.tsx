@@ -1,4 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/server';
+import Link from 'next/link';
 import AdminFiksturClient from './AdminFiksturClient';
 
 export default async function AdminFiksturPage() {
@@ -86,9 +87,14 @@ export default async function AdminFiksturPage() {
   }));
 
   return (
-    <AdminFiksturClient
-      teams={teams || []}
-      initialMatches={initialMatches}
-    />
+    <>
+      <Link href="/admin" className="flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors mb-6 inline-flex">
+        ← Admin Paneli
+      </Link>
+      <AdminFiksturClient
+        teams={teams || []}
+        initialMatches={initialMatches}
+      />
+    </>
   );
 }

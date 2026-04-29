@@ -103,8 +103,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Back Link */}
-        <Link href="/" className="text-gray-400 hover:text-white text-sm mb-4 inline-block">
-          ← Ana Sayfaya Dön
+        <Link href="/admin" className="flex items-center gap-1 text-gray-400 hover:text-white text-sm transition-colors mb-6 inline-flex">
+          ← Admin Paneli
         </Link>
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">

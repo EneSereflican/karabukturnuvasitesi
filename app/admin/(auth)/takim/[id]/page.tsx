@@ -149,7 +149,7 @@ export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
               ← Ana Sayfa
             </Link>
             <Link
-              href="/admin"
+              href="/admin/basvurular"
               className="flex items-center gap-1 text-gray-400 hover:text-gray-300 text-sm mb-4 transition-colors"
             >
               <ChevronLeft size={16} />
