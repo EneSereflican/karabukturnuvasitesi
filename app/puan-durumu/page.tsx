@@ -182,16 +182,16 @@ export default function PuanDurumuPage() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={{ ...styles.th, ...styles.thFirst }}>Sıra</th>
-                    <th style={{ ...styles.th, ...styles.thTeam }}>Takım</th>
-                    <th style={styles.th}>O</th>
-                    <th style={styles.th}>G</th>
-                    <th style={styles.th}>B</th>
-                    <th style={styles.th}>M</th>
-                    <th style={styles.th}>AG</th>
-                    <th style={styles.th}>YG</th>
-                    <th style={styles.th}>A</th>
-                    <th style={{ ...styles.th, ...styles.thLast }}>P</th>
+                    <th style={{ ...styles.th, ...styles.thFirst }} className="th-small">Sıra</th>
+                    <th style={{ ...styles.th, ...styles.thTeam }} className="th-small">Takım</th>
+                    <th style={styles.th} className="th-small">O</th>
+                    <th style={styles.th} className="th-small">G</th>
+                    <th style={styles.th} className="th-small">B</th>
+                    <th style={styles.th} className="th-small">M</th>
+                    <th style={styles.th} className="col-hide th-small">AG</th>
+                    <th style={styles.th} className="col-hide th-small">YG</th>
+                    <th style={styles.th} className="th-small">A</th>
+                    <th style={{ ...styles.th, ...styles.thLast }} className="th-small">P</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -205,7 +205,7 @@ export default function PuanDurumuPage() {
                           animation: `fadeIn 0.3s ease ${idx * 0.03}s both`,
                         }}
                       >
-                        <td style={styles.td}>
+                        <td style={styles.td} className="td-small">
                           <span
                             style={{
                               ...styles.rankBadge,
@@ -215,15 +215,15 @@ export default function PuanDurumuPage() {
                             {rank}
                           </span>
                         </td>
-                        <td style={{ ...styles.td, ...styles.tdTeam }}>
+                        <td style={{ ...styles.td, ...styles.tdTeam }} className="col-team td-small">
                           {team.name}
                         </td>
-                        <td style={styles.td}>{team.played}</td>
-                        <td style={styles.td}>{team.won}</td>
-                        <td style={styles.td}>{team.drawn}</td>
-                        <td style={styles.td}>{team.lost}</td>
-                        <td style={styles.td}>{team.goalsFor}</td>
-                        <td style={styles.td}>{team.goalsAgainst}</td>
+                        <td style={styles.td} className="td-small">{team.played}</td>
+                        <td style={styles.td} className="td-small">{team.won}</td>
+                        <td style={styles.td} className="td-small">{team.drawn}</td>
+                        <td style={styles.td} className="td-small">{team.lost}</td>
+                        <td style={styles.td} className="col-hide td-small">{team.goalsFor}</td>
+                        <td style={styles.td} className="col-hide td-small">{team.goalsAgainst}</td>
                         <td
                           style={{
                             ...styles.td,
@@ -235,12 +235,13 @@ export default function PuanDurumuPage() {
                                   : '#8a9a8e',
                             fontWeight: 700,
                           }}
+                          className="td-small"
                         >
                           {team.goalDiff > 0
                             ? `+${team.goalDiff}`
                             : team.goalDiff}
                         </td>
-                        <td style={{ ...styles.td, ...styles.tdPoints }}>
+                        <td style={{ ...styles.td, ...styles.tdPoints }} className="td-small">
                           {team.points}
                         </td>
                       </tr>
@@ -267,12 +268,16 @@ export default function PuanDurumuPage() {
       </div>
 
       <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(6px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 640px) {
+          .col-hide { display: none !important; }
+          .col-team { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+          .td-small { padding: 10px 6px !important; font-size: 12px !important; }
+          .th-small { padding: 10px 6px !important; font-size: 10px !important; }
         }
       `}</style>
     </div>
@@ -343,6 +348,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tableWrapper: {
     overflowX: 'auto' as const,
+    WebkitOverflowScrolling: 'touch',
     borderRadius: 16,
     border: '1px solid #2d4a32',
     backgroundColor: '#1a2e1d',
@@ -398,10 +404,10 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     borderRadius: 8,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 700,
   },
   legend: {

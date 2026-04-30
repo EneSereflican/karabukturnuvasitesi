@@ -365,7 +365,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#1a2e1d',
     border: '1px solid #2d4a32',
     borderRadius: 16,
-    padding: '16px 20px',
+    padding: '14px 12px',
     cursor: 'pointer',
     transition: 'all 0.2s',
     animation: 'fadeIn 0.3s ease',
@@ -402,14 +402,17 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 8,
   },
   teamName: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 600,
     color: '#ffffff',
     textAlign: 'center' as const,
+    wordBreak: 'break-word',
+    hyphens: 'auto',
+    minWidth: 0,
   },
   scoreSection: {
     flexShrink: 0,
@@ -421,7 +424,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 8,
   },
   scoreNum: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 800,
     color: '#f0a500',
     minWidth: 28,
@@ -446,7 +449,8 @@ const styles: Record<string, React.CSSProperties> = {
   dateText: {
     fontSize: 11,
     color: '#8a9a8e',
-    whiteSpace: 'nowrap' as const,
+    textAlign: 'center',
+    wordBreak: 'break-word',
   },
   expandHint: {
     textAlign: 'center' as const,
@@ -460,7 +464,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: 'none',
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
-    padding: '16px 20px',
+    padding: '14px 12px',
     animation: 'fadeIn 0.25s ease',
   },
   eventsTitle: {
@@ -474,7 +478,7 @@ const styles: Record<string, React.CSSProperties> = {
   eventRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
+    gap: 6,
     padding: '8px 0',
     borderBottom: '1px solid #1e3523',
   },
@@ -493,7 +497,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 2,
   },
   eventPlayer: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 600,
     color: '#e0e0e0',
   },

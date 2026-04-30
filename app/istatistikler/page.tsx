@@ -174,7 +174,7 @@ export default function IstatistiklerPage() {
                       <th style={{ ...styles.th, textAlign: 'left' as const, minWidth: 140 }}>
                         Oyuncu
                       </th>
-                      <th style={{ ...styles.th, textAlign: 'left' as const, minWidth: 120 }}>
+                      <th style={{ ...styles.th, textAlign: 'left' as const, minWidth: 120 }} className="col-team">
                         Takım
                       </th>
                       <th style={{ ...styles.th, width: 100 }}>
@@ -212,6 +212,7 @@ export default function IstatistiklerPage() {
                               fontWeight: 600,
                               color: '#ffffff',
                             }}
+                            className="col-player"
                           >
                             {player.playerName}
                           </td>
@@ -221,6 +222,7 @@ export default function IstatistiklerPage() {
                               textAlign: 'left' as const,
                               color: '#8a9a8e',
                             }}
+                            className="col-team"
                           >
                             {player.teamName}
                           </td>
@@ -252,6 +254,10 @@ export default function IstatistiklerPage() {
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(6px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 480px) {
+          .col-team { display: none !important; }
+          .col-player { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         }
       `}</style>
     </div>
@@ -328,12 +334,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tab: {
     flex: 1,
-    padding: '14px 16px',
+    padding: '10px 8px',
     backgroundColor: 'transparent',
     border: 'none',
     borderBottom: '3px solid transparent',
     color: '#5a7a5e',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 600,
     cursor: 'pointer',
     transition: 'all 0.2s',
@@ -363,7 +369,6 @@ const styles: Record<string, React.CSSProperties> = {
     textTransform: 'uppercase' as const,
     letterSpacing: 0.5,
     borderBottom: '2px solid #2d4a32',
-    whiteSpace: 'nowrap' as const,
   },
   tr: {
     borderBottom: '1px solid #1e3523',
@@ -373,7 +378,6 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center' as const,
     fontSize: 14,
     color: '#c0c0c0',
-    whiteSpace: 'nowrap' as const,
   },
   rankCell: {
     display: 'inline-flex',
