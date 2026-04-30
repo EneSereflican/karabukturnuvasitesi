@@ -155,6 +155,22 @@ export default function AdminKarar({
             Bu başvuru onaylanmıştır.
           </p>
         </div>
+
+        <button
+          onClick={handleUnreject}
+          disabled={loading}
+          style={{
+            backgroundColor: 'rgba(234,179,8,0.2)',
+            borderColor: 'rgba(234,179,8,0.3)',
+          }}
+          className="mt-3 w-full border text-yellow-400 h-11 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors hover:bg-yellow-500/20 disabled:opacity-50"
+        >
+          {loading ? (
+            <><Loader2 size={16} className="animate-spin" /> İşlem Yapılıyor</>
+          ) : (
+            <><RefreshCw size={16} /> Onayı Kaldır (Beklemede Yap)</>
+          )}
+        </button>
       </div>
     );
   }
