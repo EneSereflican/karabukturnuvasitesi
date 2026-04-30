@@ -136,7 +136,7 @@ export default function PuanDurumuPage() {
         border: '1px solid rgba(76, 175, 80, 0.3)',
       };
     }
-    if (rank <= 16) {
+    if (rank <= 12) {
       return {
         backgroundColor: 'rgba(240, 165, 0, 0.15)',
         color: '#f0a500',
@@ -152,7 +152,7 @@ export default function PuanDurumuPage() {
 
   const getRankLabel = (rank: number): string => {
     if (rank <= 4) return 'Direkt';
-    if (rank <= 16) return 'Playoff';
+    if (rank <= 12) return 'Playoff';
     return 'Elendi';
   };
 
@@ -258,7 +258,7 @@ export default function PuanDurumuPage() {
               <div style={styles.legendRow}>
                 <span style={{ ...styles.legendDot, backgroundColor: '#f0a500' }} />
                 <span style={styles.legendLabel}>
-                  5-16. takımlar playoff oynayacak
+                  5-12. takımlar playoff oynayacak
                 </span>
               </div>
             </div>
