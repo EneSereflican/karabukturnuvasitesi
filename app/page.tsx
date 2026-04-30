@@ -171,7 +171,7 @@ export default async function Home() {
           backgroundImage: `linear-gradient(135deg, rgba(13,31,18,0.75) 0%, rgba(13,31,18,0.88) 100%), url('/saha.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: 'scroll',
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
