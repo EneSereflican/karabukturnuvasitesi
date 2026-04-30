@@ -59,7 +59,10 @@ export default function AdminFiksturClient({ teams, initialMatches }: Props) {
     setAdding(true);
     try {
       const body: Record<string, string | number> = { home_team_id: homeTeamId, away_team_id: awayTeamId, week };
-      if (matchDate) body.match_date = matchDate;
+      if (matchDate) {
+        // datetime-local "YYYY-MM-DDTHH:MM" verir, Türkiye saati (UTC+3) olarak gönder
+        body.match_date = matchDate + ':00+03:00';
+      }
       const res = await fetch('/api/mac-ekle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       if (res.ok) {
         setAddMatchError(null);
