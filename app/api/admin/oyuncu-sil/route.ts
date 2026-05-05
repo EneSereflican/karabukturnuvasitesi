@@ -9,7 +9,7 @@ export async function DELETE(request: NextRequest) {
     const cookieStore = await cookies();
     const token = cookieStore.get('admin_token')?.value;
 
-    if (!token || !verifyAdminToken(token)) {
+    if (!token || !(await verifyAdminToken(token))) {
       return NextResponse.json(
         { error: 'Yetkisiz erişim' },
         { status: 401 }

@@ -9,6 +9,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Skip middleware for login API endpoint
+  if (pathname === '/api/admin/login') {
+    return NextResponse.next();
+  }
+
   // Check admin token for protected routes
   const token = request.cookies.get('admin_token')?.value;
 
@@ -20,5 +25,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 };
