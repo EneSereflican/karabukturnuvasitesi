@@ -366,7 +366,7 @@ Bu proje MIT Lisansı altında yayınlanmıştır. Detaylar için [LICENSE](./LI
 **Enes Şereflican**
 
 - GitHub: [@EneSereflican](https://github.com/EneSereflican)
-- LinkedIn: _[Eklenecek]_
+- LinkedIn: _[https://www.linkedin.com/in/mobiler/]_
 - Email: [easereflican@gmail.com](mailto:easereflican@gmail.com)
 
 > _Bu proje, sıfırdan tek başıma tasarlayıp geliştirdiğim bir freelance işidir. Kod kalitesi, mimari kararlar veya güvenlik yaklaşımı hakkında geri bildirim almak isterim — issue açabilir veya doğrudan iletişime geçebilirsiniz._
