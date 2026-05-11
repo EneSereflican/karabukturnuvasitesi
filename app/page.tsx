@@ -47,12 +47,20 @@ async function getHomePageData() {
         home_team:teams!home_team_id(id, name),
         away_team:teams!away_team_id(id, name)
       `)
-      .order('match_date', { ascending: true });
+      .order('week', { ascending: true })
+      .order('match_date', { ascending: true })
+      .limit(1000);
 
     // Get match events count
     const { count: eventsCount, error: eventsError } = await supabase
       .from('match_events')
       .select('*', { count: 'exact', head: true });
+
+    // Get completed matches count
+    const { count: completedCount } = await supabase
+      .from('matches')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'completed');
 
     const matches = (matchesData as unknown as Match[]) || [];
 
@@ -75,6 +83,7 @@ async function getHomePageData() {
       completedMatches,
       upcomingMatches,
       allMatches: matches,
+      completedMatchesCount: completedCount || 0,
     };
   } catch (error) {
     console.error('Error fetching home page data:', error);
@@ -102,7 +111,6 @@ function formatMatchDate(dateStr: string): string {
 
 export default async function Home() {
   const data = await getHomePageData();
-  const completedMatchesCount = data.allMatches.filter((m) => m.status === 'completed').length;
 
   return (
     <div className="min-h-screen bg-[#0d1f12] text-white">
@@ -205,7 +213,7 @@ export default async function Home() {
             </div>
             <p className="self-center text-gray-500">•</p>
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold text-[#f0a500]">{completedMatchesCount}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#f0a500]">{data.completedMatchesCount}</p>
               <p className="text-sm">Maç Tamamlandı</p>
             </div>
           </div>
