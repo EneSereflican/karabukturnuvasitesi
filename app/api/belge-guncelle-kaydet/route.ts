@@ -24,6 +24,21 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServiceClient();
 
+    // player_id bu team_id'ye ait mi kontrol et
+    const { data: playerCheck, error: playerCheckError } = await supabase
+      .from('players')
+      .select('id')
+      .eq('id', player_id)
+      .eq('team_id', team_id)
+      .single();
+
+    if (playerCheckError || !playerCheck) {
+      return NextResponse.json(
+        { error: 'Oyuncu bu takıma ait değil' },
+        { status: 403 }
+      );
+    }
+
     // Process each document
     for (const doc of documents) {
       const { document_type, file_path, file_name, file_size, mime_type } = doc;
