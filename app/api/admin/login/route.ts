@@ -6,9 +6,6 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30));
-    console.log('SERVICE_KEY_START:', process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 20));
-    console.log('SERVICE_KEY_LENGTH:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length);
     const text = await request.text();
     if (!text) {
       return NextResponse.json({ error: 'Body boş' }, { status: 400 });
