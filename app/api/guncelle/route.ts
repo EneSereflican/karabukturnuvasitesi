@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
+import { createSecureAdminClient } from '@/lib/supabase/server';
 
 function sanitizeFileName(fileName: string): string {
   return fileName
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createServiceClient();
+    const supabase = await createSecureAdminClient();
 
     // Fetch team
     const { data: team, error: teamError } = await supabase

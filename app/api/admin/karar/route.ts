@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyAdminToken } from '@/lib/admin-auth';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createSecureAdminClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { teamId, action, rejectionNote, rejectedPlayerIds } = body;
 
-    const supabase = createServiceClient();
+    const supabase = await createSecureAdminClient();
 
     if (action === 'approve') {
       // Check member count

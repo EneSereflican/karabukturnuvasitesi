@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyAdminToken } from '@/lib/admin-auth';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createSecureAdminClient } from '@/lib/supabase/server';
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const supabase = createServiceClient();
+    const supabase = await createSecureAdminClient();
 
     // Fetch all documents for the player
     const { data: documents, error: docsError } = await supabase

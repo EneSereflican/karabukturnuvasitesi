@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import { createSecureAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import AdminFiksturClient from './AdminFiksturClient';
 
@@ -48,7 +48,7 @@ type InitialMatch = {
 };
 
 export default async function AdminFiksturPage() {
-  const supabase = createServiceClient();
+  const supabase = await createSecureAdminClient();
 
   // Takımları çek
   const { data: teams } = await supabase

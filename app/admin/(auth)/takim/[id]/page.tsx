@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation';
+﻿import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createSecureAdminClient } from '@/lib/supabase/server';
 import PlayerCard from '@/components/PlayerCard';
 import AdminKarar from '@/components/AdminKarar';
 import TakimSil from '@/components/TakimSil';
@@ -53,7 +53,7 @@ function formatDate(dateString: string): string {
 export default async function AdminTeamPage({ params }: AdminTeamPageProps) {
   const { id } = await params;
 
-  const supabase = createServiceClient();
+  const supabase = await createSecureAdminClient();
 
   // Fetch team
   const { data: teamData, error: teamError } = await supabase

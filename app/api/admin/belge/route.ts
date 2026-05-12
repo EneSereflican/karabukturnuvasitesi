@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyAdminToken } from '@/lib/admin-auth';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createSecureAdminClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = createServiceClient();
+    const supabase = await createSecureAdminClient();
 
     // Download file from Supabase Storage
     const { data, error } = await supabase.storage

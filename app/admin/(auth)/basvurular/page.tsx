@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import { createSecureAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import AdminFilter from '@/components/AdminFilter';
 import {
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 async function getTeamsWithDetails() {
-  const supabase = createServiceClient();
+  const supabase = await createSecureAdminClient();
 
   // Fetch all teams
   const { data: teamsData, error: teamsError } = await supabase

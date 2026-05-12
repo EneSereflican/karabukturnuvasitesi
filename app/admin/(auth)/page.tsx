@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import { createSecureAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import {
   Users,
@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 async function getDashboardStats() {
-  const supabase = createServiceClient();
+  const supabase = await createSecureAdminClient();
 
   try {
     // Get all teams
