@@ -1,6 +1,6 @@
 import { createBrowserClient as createSupabaseBrowserClient } from '@supabase/ssr';
 
-export function createBrowserClient() {
+export function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -12,3 +12,6 @@ export function createBrowserClient() {
 
   return createSupabaseBrowserClient(supabaseUrl, anonKey);
 }
+
+// Geriye dönük uyumluluk için
+export const createBrowserClient = createClient;
