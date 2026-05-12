@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 import BasvuruFilter from '@/components/BasvuruFilter';
 import DekontYukle from '@/components/DekontYukle';
 import TakimKart from '@/components/TakimKart';
@@ -17,7 +17,7 @@ export default async function BasvuruDurumlariPage({
   const params = await searchParams;
   const durum = params.durum || null;
 
-  const supabase = createServiceClient();
+  const supabase = await createClient();
 
   // Fetch all teams
   const { data: teamsData, error: teamsError } = await supabase

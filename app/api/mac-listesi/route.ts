@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
   try {
-    const supabase = createServiceClient();
+    const supabase = await createClient();
 
     // Maçları çek, home_team ve away_team ilişkileriyle birlikte
     const { data: matches, error: matchesError } = await supabase

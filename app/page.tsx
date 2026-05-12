@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import {
   Trophy,
@@ -21,7 +21,7 @@ interface Match {
 }
 
 async function getHomePageData() {
-  const supabase = createServiceClient();
+  const supabase = await createClient();
 
   try {
     // Get teams count

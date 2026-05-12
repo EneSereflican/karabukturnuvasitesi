@@ -1,5 +1,5 @@
-import { notFound } from 'next/navigation';
-import { createServiceClient } from '@/lib/supabase/server';
+﻿import { notFound } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import OyuncuForm from '@/components/OyuncuForm';
 
 interface OyuncuBasvuruPageProps {
@@ -13,7 +13,7 @@ export default async function OyuncuBasvuruPage({
 }: OyuncuBasvuruPageProps) {
   const { token } = await params;
 
-  const supabase = createServiceClient();
+  const supabase = await createClient();
 
   // Fetch team by invite token
   const { data: teamData, error: teamError } = await supabase

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'team_id gerekli' }, { status: 400 });
     }
 
-    const supabase = createServiceClient();
+    const supabase = await createClient();
 
     const { data: players, error } = await supabase
       .from('players')
