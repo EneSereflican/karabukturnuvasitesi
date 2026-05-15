@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Turnuva Başvuru Sistemi | 2026 Bahar Sezonu',
   description: 'Kamu Kurumları Bahar Futbol Turnuvası — Resmi Online Başvuru ve Takip Sistemi',
   icons: {
@@ -29,18 +29,17 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
+      <body className="min-h-full flex flex-col">
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8822707598939084"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-      </head>
-      <body className="min-h-full flex flex-col">
+        
         <SystemNoticeModal />
         {children}
       </body>
