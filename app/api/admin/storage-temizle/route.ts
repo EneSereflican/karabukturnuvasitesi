@@ -1,43 +1,54 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
-import { SupabaseClient } from '@supabase/supabase-js';
-
-async function listAllFiles(supabase: SupabaseClient, path: string): Promise<string[]> {
-  const { data, error } = await supabase.storage
-    .from('documents')
-    .list(path, { limit: 1000 });
-
-  if (error || !data) return [];
-
-  const files: string[] = [];
-  for (const item of data) {
-    const fullPath = path ? `${path}/${item.name}` : item.name;
-    if (item.metadata) {
-      if (fullPath.includes('tc_front') || fullPath.includes('tc_back')) {
-        files.push(fullPath);
-      }
-    } else {
-      const subFiles = await listAllFiles(supabase, fullPath);
-      files.push(...subFiles);
-    }
-  }
-  return files;
-}
 
 export async function POST() {
   try {
     const supabase = createServiceClient();
-    const tcFiles = await listAllFiles(supabase, 'teams');
 
-    if (tcFiles.length === 0) {
-      return NextResponse.json({ message: 'Silinecek TC dosyası bulunamadı', deleted: 0 });
+    // Tüm takım klasörlerini listele
+    const { data: teamFolders } = await supabase.storage
+      .from('documents')
+      .list('teams', { limit: 1000 });
+
+    if (!teamFolders) {
+      return NextResponse.json({ message: 'Klasör bulunamadı' });
     }
 
     let totalDeleted = 0;
-    for (let i = 0; i < tcFiles.length; i += 100) {
-      const chunk = tcFiles.slice(i, i + 100);
-      const { error } = await supabase.storage.from('documents').remove(chunk);
-      if (!error) totalDeleted += chunk.length;
+
+    for (const team of teamFolders) {
+      // Her takımın players klasörünü listele
+      const { data: playerFolders } = await supabase.storage
+        .from('documents')
+        .list(`teams/${team.name}/players`, { limit: 1000 });
+
+      if (!playerFolders) continue;
+
+      for (const player of playerFolders) {
+        const basePath = `teams/${team.name}/players/${player.name}`;
+
+        // tc_front klasörünü sil
+        const { data: tcFrontFiles } = await supabase.storage
+          .from('documents')
+          .list(`${basePath}/tc_front`, { limit: 1000 });
+
+        if (tcFrontFiles && tcFrontFiles.length > 0) {
+          const paths = tcFrontFiles.map(f => `${basePath}/tc_front/${f.name}`);
+          const { error } = await supabase.storage.from('documents').remove(paths);
+          if (!error) totalDeleted += paths.length;
+        }
+
+        // tc_back klasörünü sil
+        const { data: tcBackFiles } = await supabase.storage
+          .from('documents')
+          .list(`${basePath}/tc_back`, { limit: 1000 });
+
+        if (tcBackFiles && tcBackFiles.length > 0) {
+          const paths = tcBackFiles.map(f => `${basePath}/tc_back/${f.name}`);
+          const { error } = await supabase.storage.from('documents').remove(paths);
+          if (!error) totalDeleted += paths.length;
+        }
+      }
     }
 
     return NextResponse.json({ success: true, deleted: totalDeleted });
