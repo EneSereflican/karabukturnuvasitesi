@@ -14,6 +14,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === '/api/admin/storage-temizle') {
+    return NextResponse.next();
+  }
+
   // Check admin token for protected routes
   const token = request.cookies.get('admin_token')?.value;
 
