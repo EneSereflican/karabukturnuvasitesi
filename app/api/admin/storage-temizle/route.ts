@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
+import { SupabaseClient } from '@supabase/supabase-js';
 
-async function listAllFiles(supabase: ReturnType<typeof createServiceClient>, path: string): Promise<string[]> {
-  const { data, error } = await (await supabase).storage
+async function listAllFiles(supabase: SupabaseClient, path: string): Promise<string[]> {
+  const { data, error } = await supabase.storage
     .from('documents')
     .list(path, { limit: 1000 });
 
@@ -12,12 +13,10 @@ async function listAllFiles(supabase: ReturnType<typeof createServiceClient>, pa
   for (const item of data) {
     const fullPath = path ? `${path}/${item.name}` : item.name;
     if (item.metadata) {
-      // dosya
       if (fullPath.includes('tc_front') || fullPath.includes('tc_back')) {
         files.push(fullPath);
       }
     } else {
-      // klasör - recursive
       const subFiles = await listAllFiles(supabase, fullPath);
       files.push(...subFiles);
     }
@@ -28,9 +27,8 @@ async function listAllFiles(supabase: ReturnType<typeof createServiceClient>, pa
 export async function POST() {
   try {
     const supabase = createServiceClient();
-    
-    const tcFiles = await listAllFiles(Promise.resolve(supabase), 'teams');
-    
+    const tcFiles = await listAllFiles(supabase, 'teams');
+
     if (tcFiles.length === 0) {
       return NextResponse.json({ message: 'Silinecek TC dosyası bulunamadı', deleted: 0 });
     }
@@ -42,7 +40,7 @@ export async function POST() {
       if (!error) totalDeleted += chunk.length;
     }
 
-    return NextResponse.json({ success: true, deleted: totalDeleted, paths: tcFiles.slice(0, 5) });
+    return NextResponse.json({ success: true, deleted: totalDeleted });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
