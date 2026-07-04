@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { standings as staticStandings } from '@/lib/portfolio-data';
 
 interface Team {
   id: string;
@@ -38,94 +39,9 @@ export default function PuanDurumuPage() {
   const [hasCompleted, setHasCompleted] = useState(false);
 
   useEffect(() => {
-    async function fetchAndCalculate() {
-      try {
-        const res = await fetch('/api/mac-listesi');
-        const data = await res.json();
-
-        if (!data.matches) return;
-
-        const completed = (data.matches as Match[]).filter(
-          (m) => m.status === 'completed'
-        );
-
-        if (completed.length === 0) {
-          setHasCompleted(false);
-          return;
-        }
-
-        setHasCompleted(true);
-
-        const teamsMap: Record<string, TeamStanding> = {};
-
-        const ensureTeam = (team: Team) => {
-          if (!teamsMap[team.id]) {
-            teamsMap[team.id] = {
-              id: team.id,
-              name: team.name,
-              played: 0,
-              won: 0,
-              drawn: 0,
-              lost: 0,
-              goalsFor: 0,
-              goalsAgainst: 0,
-              goalDiff: 0,
-              points: 0,
-            };
-          }
-        };
-
-        for (const match of completed) {
-          const hs = match.home_score ?? 0;
-          const as_ = match.away_score ?? 0;
-
-          ensureTeam(match.home_team);
-          ensureTeam(match.away_team);
-
-          const home = teamsMap[match.home_team.id];
-          const away = teamsMap[match.away_team.id];
-
-          home.played++;
-          away.played++;
-
-          home.goalsFor += hs;
-          home.goalsAgainst += as_;
-          away.goalsFor += as_;
-          away.goalsAgainst += hs;
-
-          if (hs > as_) {
-            home.won++;
-            home.points += 3;
-            away.lost++;
-          } else if (hs < as_) {
-            away.won++;
-            away.points += 3;
-            home.lost++;
-          } else {
-            home.drawn++;
-            away.drawn++;
-            home.points += 1;
-            away.points += 1;
-          }
-        }
-
-        const sorted = Object.values(teamsMap)
-          .map((t) => ({ ...t, goalDiff: t.goalsFor - t.goalsAgainst }))
-          .sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
-            return b.goalsFor - a.goalsFor;
-          });
-
-        setStandings(sorted);
-      } catch {
-        console.error('Veriler yüklenemedi');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchAndCalculate();
+    setStandings(staticStandings);
+    setHasCompleted(staticStandings.length > 0);
+    setLoading(false);
   }, []);
 
   const getRankStyle = (rank: number): React.CSSProperties => {

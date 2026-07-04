@@ -18,7 +18,7 @@ interface TeamInfo {
 }
 
 export default function PlayerApplicationPage() {
-  const BASVURULAR_KAPALI = false;
+  const BASVURULAR_KAPALI = true;
 
   const errorRef = useRef<HTMLDivElement>(null);
 

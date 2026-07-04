@@ -1,9 +1,6 @@
 ﻿import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
-import BasvuruFilter from '@/components/BasvuruFilter';
-import DekontYukle from '@/components/DekontYukle';
 import TakimKart from '@/components/TakimKart';
-import { Building2, User } from 'lucide-react';
+import { archiveMeta, applicationTeams } from '@/lib/portfolio-data';
 
 interface BasvuruDurumlariPageProps {
   searchParams: Promise<{
@@ -17,56 +14,13 @@ export default async function BasvuruDurumlariPage({
   const params = await searchParams;
   const durum = params.durum || null;
 
-  const supabase = await createClient();
-
-  // Fetch all teams
-  const { data: teamsData, error: teamsError } = await supabase
-    .from('teams')
-    .select('id, name, institution, status, rejection_note, rejected_player_ids, created_at, team_key')
-    .order('created_at', { ascending: true });
-
-  if (teamsError) {
-    return (
-      <div className="min-h-screen bg-[#0d1f12] py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-red-400">Veri yüklenirken bir hata oluştu.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const teams = teamsData || [];
-
-  // Fetch player counts and receipt data for each team
-  const teamsWithMembers = await Promise.all(
-    teams.map(async (team) => {
-      const { data: playersData } = await supabase
-        .from('players')
-        .select('id, first_name, last_name, jersey_number')
-        .eq('team_id', team.id)
-        .order('jersey_number', { ascending: true });
-
-      const totalMembers = playersData?.length ?? 0;
-
-      // Check for bank receipt
-      const { data: receiptDoc } = await supabase
-        .from('documents')
-        .select('id')
-        .eq('team_id', team.id)
-        .eq('owner_type', 'team')
-        .eq('document_type', 'bank_receipt')
-        .single();
-
-      const hasReceipt = !!receiptDoc;
-
-      return {
-        ...team,
-        totalMembers,
-        players: playersData ?? [],
-        hasReceipt,
-      };
-    })
-  );
+  const teamsWithMembers = applicationTeams.map((team) => ({
+    ...team,
+    rejection_note: team.rejectionNote,
+    rejected_player_ids: team.rejectedPlayerNames,
+    team_key: team.teamKey,
+    players: [],
+  }));
 
   // Calculate counts
   const counts = {
@@ -129,8 +83,10 @@ export default async function BasvuruDurumlariPage({
           </div>
         </div>
 
-        {/* 2) FİLTRE SEKMELERİ */}
-        <BasvuruFilter active={activeFilter} counts={counts} />
+        <div className="mb-8 rounded-2xl border border-[#2d4a32] bg-[#1a2e1d] p-4 text-center text-sm text-gray-300">
+          <p className="font-semibold text-white">{archiveMeta.highlightLabel}</p>
+          <p className="mt-1">Bu ekran geçmiş başvuruların arşiv görünümüdür. Veriler sabitlenmiştir.</p>
+        </div>
 
         {/* 3) TAKIM KARTLARI */}
         {filteredTeams.length === 0 ? (

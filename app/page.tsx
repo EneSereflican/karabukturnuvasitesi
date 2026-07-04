@@ -1,5 +1,4 @@
 ﻿import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import {
   Trophy,
@@ -8,6 +7,7 @@ import {
   Lock,
   Users,
 } from 'lucide-react';
+import { archiveMeta, fixtures } from '@/lib/portfolio-data';
 
 interface Match {
   id: string;
@@ -21,81 +21,18 @@ interface Match {
 }
 
 async function getHomePageData() {
-  const supabase = await createClient();
+  const matches = fixtures as Match[];
+  const completedMatches = matches.slice(-3).reverse();
 
-  try {
-    // Get teams count
-    const { count: teamsCount, error: teamsError } = await supabase
-      .from('teams')
-      .select('*', { count: 'exact', head: true });
-
-    // Get players count
-    const { count: playersCount, error: playersError } = await supabase
-      .from('players')
-      .select('*', { count: 'exact', head: true });
-
-    // Get all matches with team info
-    const { data: matchesData, error: matchesError } = await supabase
-      .from('matches')
-      .select(`
-        id,
-        week,
-        match_date,
-        status,
-        home_score,
-        away_score,
-        home_team:teams!home_team_id(id, name),
-        away_team:teams!away_team_id(id, name)
-      `)
-      .order('week', { ascending: true })
-      .order('match_date', { ascending: true })
-      .limit(1000);
-
-    // Get match events count
-    const { count: eventsCount, error: eventsError } = await supabase
-      .from('match_events')
-      .select('*', { count: 'exact', head: true });
-
-    // Get completed matches count
-    const { count: completedCount } = await supabase
-      .from('matches')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'completed');
-
-    const matches = (matchesData as unknown as Match[]) || [];
-
-    // Get last 3 completed matches
-    const completedMatches = matches
-      .filter((m) => m.status === 'completed' && m.home_score !== null && m.away_score !== null)
-      .reverse()
-      .slice(0, 3);
-
-    // Get next 3 scheduled matches
-    const now = new Date();
-    const upcomingMatches = matches
-      .filter((m) => m.status === 'scheduled' && new Date(m.match_date) > now)
-      .slice(0, 3);
-
-    return {
-      teamsCount: teamsCount || 0,
-      playersCount: playersCount || 0,
-      eventsCount: eventsCount || 0,
-      completedMatches,
-      upcomingMatches,
-      allMatches: matches,
-      completedMatchesCount: completedCount || 0,
-    };
-  } catch (error) {
-    console.error('Error fetching home page data:', error);
-    return {
-      teamsCount: 0,
-      playersCount: 0,
-      eventsCount: 0,
-      completedMatches: [],
-      upcomingMatches: [],
-      allMatches: [],
-    };
-  }
+  return {
+    teamsCount: archiveMeta.teamsCount,
+    playersCount: archiveMeta.playersCount,
+    eventsCount: archiveMeta.eventsCount,
+    completedMatches,
+    upcomingMatches: [],
+    allMatches: matches,
+    completedMatchesCount: archiveMeta.completedMatchesCount,
+  };
 }
 
 function formatMatchDate(dateStr: string): string {
@@ -353,7 +290,7 @@ export default async function Home() {
                 alt="Sahada Mücadele"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-4">
                 <h3 className="text-white font-semibold text-lg">Sahada Mücadele</h3>
               </div>
             </div>
@@ -365,7 +302,7 @@ export default async function Home() {
                 alt="Turnuva Ruhu"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-4">
                 <h3 className="text-white font-semibold text-lg">Turnuva Ruhu</h3>
               </div>
             </div>
@@ -377,7 +314,7 @@ export default async function Home() {
                 alt="Taraftarlarımız"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-4">
                 <h3 className="text-white font-semibold text-lg">Karabük'ün Coşkusu</h3>
               </div>
             </div>

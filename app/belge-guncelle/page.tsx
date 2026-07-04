@@ -23,6 +23,23 @@ const documentConfig = [
 ];
 
 export default function BelgeGuncellePage() {
+  return (
+    <div style={{ backgroundColor: '#0d1f12' }} className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto">
+        <Link href="/" className="text-gray-400 hover:text-white text-sm mb-6 inline-block">
+          ← Ana Sayfa
+        </Link>
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 text-center">
+          <AlertCircle size={48} className="text-[#f0a500] mx-auto mb-4" />
+          <h1 className="text-white text-2xl font-bold mb-2">Belge Güncelleme Kapalı</h1>
+          <p className="text-gray-400">
+            Turnuva tamamlandığı için belge güncelleme akışı kapatıldı. Bu ekran yalnızca geçmiş süreci göstermek için korunuyor.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+
   const [step, setStep] = useState<'auth' | 'form' | 'success'>('auth');
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo | null>(null);
 

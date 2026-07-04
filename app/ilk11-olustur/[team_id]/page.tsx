@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
+import { lineupArchiveByTeamId } from '@/lib/portfolio-data'
 
 interface Player {
   id: string
@@ -15,6 +16,38 @@ interface Player {
 export default function IlkOnBirOlusturPage() {
   const params = useParams()
   const team_id = params.team_id as string
+
+  const archive = lineupArchiveByTeamId[team_id] ?? lineupArchiveByTeamId['team-karabuk-belediyesi']
+
+  return (
+    <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <Link href="/basvuru-durumlari" className="text-gray-400 hover:text-white text-sm mb-6 inline-block">
+          ← Geri Dön
+        </Link>
+
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8">
+          <h1 className="text-white text-2xl font-bold mb-2">İlk 11 Arşivi</h1>
+          <p className="text-gray-400 text-sm mb-6">Seçim ekranı artık kapalı. Aşağıda örnek bir kadro yer alıyor.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="rounded-xl border border-[#2d4a32] bg-[#0d1f12] p-4">
+              <p className="text-gray-400 text-xs mb-1">Takım</p>
+              <p className="text-white font-semibold">{archive.teamName}</p>
+            </div>
+            <div className="rounded-xl border border-[#2d4a32] bg-[#0d1f12] p-4">
+              <p className="text-gray-400 text-xs mb-1">Formasyon</p>
+              <p className="text-[#f0a500] font-semibold">{archive.formation}</p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-dashed border-[#2d4a32] bg-[#0d1f12] p-4 text-sm text-gray-300">
+            Bu turnuva için ilk 11 seçimleri tamamlandı. Arşiv verisi gösteriliyor, yeni kayıt alınmıyor.
+          </div>
+        </div>
+      </div>
+    </main>
+  )
 
   // Auth state
   const [authStep, setAuthStep] = useState<'auth' | 'form'>('auth')

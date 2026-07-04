@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle, Trash2, Loader2, CheckCircle2 } from 'lucide-react'
+import { lineupArchiveByTeamId } from '@/lib/portfolio-data'
 
 interface Player {
   id: string
@@ -25,6 +26,89 @@ interface Lineup {
 export default function IlkOnBirGoruntulePage() {
   const params = useParams()
   const team_id = params.team_id as string
+
+  const archive = lineupArchiveByTeamId[team_id] ?? lineupArchiveByTeamId['team-karabuk-belediyesi']
+
+  return (
+    <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <Link href="/basvuru-durumlari" className="text-gray-400 hover:text-white text-sm mb-6 inline-block">
+          ← Geri Dön
+        </Link>
+
+        <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8">
+          <div className="mb-8">
+            <h1 className="text-white text-3xl font-bold">İlk 11 Arşivi</h1>
+            <div className="flex items-center gap-4 mt-3 flex-wrap">
+              <span className="inline-block bg-[#f0a500]/20 border border-[#f0a500]/30 text-[#f0a500] text-sm font-bold px-4 py-2 rounded-full">
+                Formasyon: {archive.formation}
+              </span>
+              <span className="text-gray-400 text-sm">
+                Takım: <span className="text-white font-semibold">{archive.teamName}</span>
+              </span>
+              {archive.createdByName && (
+                <span className="text-gray-400 text-sm">
+                  Oluşturan: <span className="text-white font-semibold">{archive.createdByName}</span>
+                </span>
+              )}
+            </div>
+          </div>
+
+          {archive.deletedByName ? (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 text-center">
+              <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
+              <h2 className="text-white text-xl font-bold mb-2">Silinmiş Arşiv</h2>
+              <p className="text-gray-400">Bu ilk 11, {archive.deletedByName} tarafından kaldırılmış.</p>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-white font-bold text-xl mb-6 border-l-4 border-[#f0a500] pl-3">
+                İlk 11 Oyuncu ({archive.players.length})
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {archive.players.map(player => (
+                  <div key={player.id} className="flex items-center gap-4 bg-[#0d1f12] border border-[#2d4a32] rounded-lg p-4 hover:border-[#f0a500]/30 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-[#f0a500]/20 border border-[#f0a500]/30 flex items-center justify-center shrink-0 text-[#f0a500] font-bold text-lg">
+                      {player.jersey_number}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium truncate">{player.first_name} {player.last_name}</p>
+                      <p className="text-gray-400 text-xs">Forma: #{player.jersey_number}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {archive.substitutes.length > 0 && (
+                <div className="mt-10">
+                  <h2 className="text-white font-bold text-xl mb-6 border-l-4 border-[#9333ea] pl-3">
+                    Yedekler ({archive.substitutes.length})
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {archive.substitutes.map(player => (
+                      <div key={player.id} className="flex items-center gap-4 bg-[#0d1f12]/50 border border-[#2d4a32]/50 rounded-lg p-4">
+                        <div className="w-12 h-12 rounded-full bg-[#9333ea]/20 border border-[#9333ea]/30 flex items-center justify-center shrink-0 text-[#9333ea] font-bold text-lg">
+                          {player.jersey_number}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-gray-300 font-medium truncate">{player.first_name} {player.last_name}</p>
+                          <p className="text-gray-500 text-xs">Forma: #{player.jersey_number}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-8 rounded-xl border border-dashed border-[#2d4a32] bg-[#0d1f12] p-4 text-sm text-gray-300">
+            Düzenleme akışı kapatıldı. Bu ekran turnuva dönemindeki ilk 11 kurgusunun arşiv temsili olarak tutuluyor.
+          </div>
+        </div>
+      </div>
+    </main>
+  )
 
   const [lineup, setLineup] = useState<Lineup | null>(null)
   const [players, setPlayers] = useState<Player[]>([])

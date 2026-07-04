@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { fixtures } from '@/lib/portfolio-data';
 
 interface Team {
   id: string;
@@ -45,20 +46,8 @@ export default function IstatistiklerPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('goal');
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/mac-listesi');
-        const data = await res.json();
-        if (data.matches) {
-          setMatches(data.matches);
-        }
-      } catch {
-        console.error('Veriler yüklenemedi');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
+    setMatches(fixtures as Match[]);
+    setLoading(false);
   }, []);
 
   const buildTeamMap = (): Record<string, string> => {

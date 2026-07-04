@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { fixtures } from '@/lib/portfolio-data';
 
 interface Team {
   id: string;
@@ -36,24 +37,11 @@ export default function FiksturPage() {
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchMatches() {
-      try {
-        const res = await fetch('/api/mac-listesi');
-        const data = await res.json();
-        if (data.matches) {
-          setMatches(data.matches);
-          const weeks = [...new Set(data.matches.map((m: Match) => m.week))].sort(
-            (a, b) => (a as number) - (b as number)
-          );
-          if (weeks.length > 0) setActiveWeek(weeks[0] as number);
-        }
-      } catch {
-        console.error('Maçlar yüklenemedi');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMatches();
+    const staticMatches = fixtures as Match[];
+    setMatches(staticMatches);
+    const weeks = [...new Set(staticMatches.map((m) => m.week))].sort((a, b) => a - b);
+    if (weeks.length > 0) setActiveWeek(weeks[0]);
+    setLoading(false);
   }, []);
 
   const weeks = [...new Set(matches.map((m) => m.week))].sort((a, b) => a - b);
