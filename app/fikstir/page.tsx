@@ -37,7 +37,7 @@ export default function FiksturPage() {
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
 
   useEffect(() => {
-    const staticMatches = fixtures as Match[];
+    const staticMatches = fixtures as unknown as Match[];
     setMatches(staticMatches);
     const weeks = [...new Set(staticMatches.map((m) => m.week))].sort((a, b) => a - b);
     if (weeks.length > 0) setActiveWeek(weeks[0]);
