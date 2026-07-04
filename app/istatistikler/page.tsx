@@ -2,28 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { fixtures } from '@/lib/portfolio-data';
-
-interface Team {
-  id: string;
-  name: string;
-}
-
-interface MatchEvent {
-  id: string;
-  event_type: 'goal' | 'yellow_card' | 'red_card';
-  minute: number;
-  player_id: string;
-  team_id: string;
-  player_name: string | null;
-}
-
-interface Match {
-  id: string;
-  home_team: Team;
-  away_team: Team;
-  events: MatchEvent[];
-}
+import { fixtures, type FixtureMatch } from '@/lib/portfolio-data';
 
 interface PlayerStat {
   playerId: string;
@@ -41,12 +20,12 @@ const TABS: { key: TabKey; label: string }[] = [
 ];
 
 export default function IstatistiklerPage() {
-  const [matches, setMatches] = useState<Match[]>([]);
+  const [matches, setMatches] = useState<FixtureMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>('goal');
 
   useEffect(() => {
-    setMatches(fixtures as Match[]);
+    setMatches(fixtures);
     setLoading(false);
   }, []);
 
@@ -66,17 +45,19 @@ export default function IstatistiklerPage() {
     for (const match of matches) {
       for (const event of match.events) {
         if (event.event_type !== eventType) continue;
-        if (!event.player_id) continue;
 
-        if (!playerMap[event.player_id]) {
-          playerMap[event.player_id] = {
-            playerId: event.player_id,
-            playerName: event.player_name || 'Bilinmeyen Oyuncu',
+        const playerName = event.player_name || 'Bilinmeyen Oyuncu';
+        const playerId = `${event.team_id}:${playerName.toLowerCase()}`;
+
+        if (!playerMap[playerId]) {
+          playerMap[playerId] = {
+            playerId,
+            playerName,
             teamName: teamMap[event.team_id] || 'Bilinmeyen Takım',
             count: 0,
           };
         }
-        playerMap[event.player_id].count++;
+        playerMap[playerId].count++;
       }
     }
 

@@ -23,13 +23,14 @@ interface Match {
 async function getHomePageData() {
   const matches = fixtures as Match[];
   const completedMatches = matches.slice(-3).reverse();
+  const upcomingMatches: Match[] = [];
 
   return {
     teamsCount: archiveMeta.teamsCount,
     playersCount: archiveMeta.playersCount,
     eventsCount: archiveMeta.eventsCount,
     completedMatches,
-    upcomingMatches: [],
+    upcomingMatches,
     allMatches: matches,
     completedMatchesCount: archiveMeta.completedMatchesCount,
   };

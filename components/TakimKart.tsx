@@ -50,6 +50,7 @@ export default function TakimKart({ team }: TakimKartProps) {
     rejected: { label: 'Reddedildi', bg: 'rgba(239,68,68,0.2)', border: 'rgba(239,68,68,0.3)', color: '#f87171' },
   }
   const sc = statusConfig[team.status as keyof typeof statusConfig] || statusConfig.pending
+  const rejectedPlayerIds = team.rejected_player_ids ?? []
 
   const documentFields = [
     { key: 'tc_front', label: 'TC Kimlik Ön Yüz' },
@@ -59,6 +60,81 @@ export default function TakimKart({ team }: TakimKartProps) {
     { key: 'passport_photo', label: 'Vesikalık Fotoğraf' },
     { key: 'other_document', label: 'Taahhütname' },
   ]
+
+  return (
+    <div
+      className="border rounded-2xl p-5 mb-4 transition-colors"
+      style={{ backgroundColor: '#1a2e1d', borderColor: '#2d4a32' }}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <h3 className="text-white font-bold text-lg">{team.name}</h3>
+          <div className="flex items-center gap-1 mt-1">
+            <span
+              className="text-xs px-2 py-0.5 rounded-full border font-medium"
+              style={{ backgroundColor: sc.bg, borderColor: sc.border, color: sc.color }}
+            >
+              {sc.label}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 mt-1 text-gray-400 text-sm">
+            <Building2 size={13} />
+            <span>{team.institution}</span>
+          </div>
+          <div className="flex items-center gap-1 mt-0.5 text-gray-400 text-sm">
+            <Users size={13} />
+            <span>{team.totalMembers}/15 üye</span>
+          </div>
+        </div>
+        <div
+          className="w-14 h-14 rounded-full border-2 flex items-center justify-center flex-col shrink-0"
+          style={{ borderColor: sc.border }}
+        >
+          <span className="text-white font-bold text-lg leading-none">{team.totalMembers}</span>
+          <span className="text-gray-400 text-xs">/15</span>
+        </div>
+      </div>
+
+      {team.status === 'rejected' && team.rejection_note && (
+        <div
+          className="border rounded-xl p-3 mt-3"
+          style={{ backgroundColor: 'rgba(239,68,68,0.05)', borderColor: 'rgba(239,68,68,0.2)' }}
+        >
+          <div className="flex items-center gap-2">
+            <AlertCircle size={14} className="text-red-400 shrink-0" />
+            <p className="text-red-400 text-sm font-medium">Red Gerekçesi:</p>
+          </div>
+          <p className="text-red-300 text-sm mt-1">{team.rejection_note}</p>
+          {rejectedPlayerIds.length > 0 && (
+            <p className="text-red-300 text-xs mt-2">Sorunlu oyuncu: {rejectedPlayerIds.join(', ')}</p>
+          )}
+        </div>
+      )}
+
+      <div className="mt-4 rounded-xl border border-dashed border-[#2d4a32] bg-[#0d1f12] p-3 text-sm text-gray-300">
+        Bu kart arşiv modunda görüntüleniyor. Başvuru ve belge işlemleri kapatıldı.
+      </div>
+
+      <div className="flex flex-wrap gap-2 mt-3">
+        <Link
+          href={`/ilk11-goruntule/${team.id}`}
+          className="flex items-center gap-1 text-xs rounded-lg px-3 py-1.5 border transition-colors"
+          style={{ backgroundColor: 'rgba(168,85,247,0.1)', borderColor: 'rgba(168,85,247,0.3)', color: '#a855f7' }}
+        >
+          <Eye size={13} />
+          İlk 11&apos;i Görüntüle
+        </Link>
+        <Link
+          href={`/ilk11-olustur/${team.id}`}
+          className="flex items-center gap-1 text-xs rounded-lg px-3 py-1.5 border transition-colors"
+          style={{ backgroundColor: 'rgba(240,165,0,0.1)', borderColor: 'rgba(240,165,0,0.3)', color: '#f0a500' }}
+        >
+          <Trophy size={13} />
+          İlk 11 Arşivi
+        </Link>
+      </div>
+    </div>
+  )
 
   const handleBgAuth = async () => {
     setBgIdentifierError(null)
@@ -192,10 +268,10 @@ export default function TakimKart({ team }: TakimKartProps) {
             <p className="text-red-400 text-sm font-medium">Red Gerekçesi:</p>
           </div>
           <p className="text-red-300 text-sm mt-1">{team.rejection_note}</p>
-          {team.rejected_player_ids && team.rejected_player_ids.length > 0 && (
+          {rejectedPlayerIds.length > 0 && (
             <div className="mt-2">
               <p className="text-red-400 text-xs font-medium">Sorunlu Oyuncular:</p>
-              {team.rejected_player_ids.map(pid => {
+              {rejectedPlayerIds.map(pid => {
                 const p = team.players.find(pl => pl.id === pid)
                 if (!p) return null
                 return <p key={pid} className="text-red-300 text-xs">• {p.first_name} {p.last_name}</p>
