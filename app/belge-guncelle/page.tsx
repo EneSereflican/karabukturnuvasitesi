@@ -232,15 +232,15 @@ export default function BelgeGuncellePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-gray-400 text-xs mb-1">Takım Adı</p>
-                <p className="text-white font-medium">{playerInfo.team_name}</p>
+                <p className="text-white font-medium">{playerInfo?.team_name}</p>
               </div>
               <div>
                 <p className="text-gray-400 text-xs mb-1">Oyuncu Adı</p>
-                <p className="text-white font-medium">{playerInfo.player_name}</p>
+                <p className="text-white font-medium">{playerInfo?.player_name}</p>
               </div>
             </div>
 
-            {playerInfo.rejection_note && (
+            {playerInfo?.rejection_note && (
               <div
                 style={{
                   backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -255,7 +255,7 @@ export default function BelgeGuncellePage() {
                 <div>
                   <p className="text-red-400 text-xs font-medium">Red Gerekçesi:</p>
                   <p className="text-red-300 text-sm mt-1">
-                    {playerInfo.rejection_note}
+                    {playerInfo?.rejection_note}
                   </p>
                 </div>
               </div>
