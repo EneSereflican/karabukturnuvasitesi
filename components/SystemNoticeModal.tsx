@@ -47,6 +47,9 @@ export function SystemNoticeModal() {
           <p>
             2025-2026 Karabük Üniversitesi Futbol Turnuvası tamamlanmıştır. Tüm takımlara ve oyunculara katılımları için teşekkür ederiz.
           </p>
+          <p>
+            Sitede göreceğiniz içerikler turnuva sonrası eklenen demo istatistiklerdir.
+          </p>
         </div>
 
         {/* Alt Butonlar */}
