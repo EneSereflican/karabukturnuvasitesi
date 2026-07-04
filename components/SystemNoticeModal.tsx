@@ -39,19 +39,14 @@ export function SystemNoticeModal() {
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#f0a500]/20 mb-4">
             <AlertTriangle className="h-6 w-6 text-[#f0a500]" />
           </div>
-          <h2 className="text-xl font-bold text-white">Önemli Duyuru</h2>
+          <h2 className="text-xl font-bold text-white">Turnuva Sona Erdi</h2>
         </div>
 
         {/* Mesaj İçeriği */}
         <div className="space-y-4 text-gray-300 text-sm leading-relaxed text-center">
-          <p>Sevgili kullanıcılarımız,</p>
           <p>
-            Veritabanımızda meydana gelen aşırı yüklemeden dolayı sistemimizde geçici bir kesinti yaşanmıştır. Sistem yedeği kullanılarak eski maçlar ve istatistikler el ile tek tek girilerek kurtarılmıştır.
+            2025-2026 Karabük Üniversitesi Futbol Turnuvası tamamlanmıştır. Tüm takımlara ve oyunculara katılımları için teşekkür ederiz.
           </p>
-          <p className="font-medium text-[#f0a500]">
-            Eğer eksik olan bir maç sonucu, sarı/kırmızı kart veya gol gibi istatistik hataları fark ederseniz, lütfen WhatsApp üzerinden bizimle iletişime geçiniz.
-          </p>
-          <p>Anlayışınız için teşekkür ederiz.</p>
         </div>
 
         {/* Alt Butonlar */}
