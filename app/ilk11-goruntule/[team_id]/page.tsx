@@ -206,7 +206,7 @@ export default function IlkOnBirGoruntulePage() {
     )
   }
 
-  if (!lineup || !lineup?.players || lineup.players.length === 0) {
+  if (!lineup || !lineup?.players || lineup?.players.length === 0) {
     if (lineup?.deleted_by_name) {
       return (
         <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
