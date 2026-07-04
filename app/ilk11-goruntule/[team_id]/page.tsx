@@ -217,7 +217,7 @@ export default function IlkOnBirGoruntulePage() {
             <div className="bg-[#1a2e1d] border border-[#2d4a32] rounded-2xl p-8 text-center">
               <AlertCircle size={48} className="text-yellow-400 mx-auto mb-4" />
               <h1 className="text-white text-xl font-bold mb-2">İlk 11 Silindi</h1>
-              <p className="text-gray-400 mb-6">Bu ilk 11 <span className="text-white font-semibold">{lineup.deleted_by_name}</span> tarafından silindi.</p>
+              <p className="text-gray-400 mb-6">Bu ilk 11 <span className="text-white font-semibold">{lineup?.deleted_by_name}</span> tarafından silindi.</p>
               <Link href={`/ilk11-olustur/${team_id}`}>
                 <button className="bg-[#f0a500] text-[#0d1f12] font-bold px-6 py-3 rounded-xl hover:bg-[#f0a500]/90 transition-colors">
                   Yeni İlk 11 Oluştur
@@ -250,8 +250,8 @@ export default function IlkOnBirGoruntulePage() {
     )
   }
 
-  const startingPlayers = players.filter(p => lineup.players.includes(p.id))
-  const substitutePlayers = players.filter(p => lineup.substitutes.includes(p.id))
+  const startingPlayers = players.filter(p => lineup?.players?.includes(p.id))
+  const substitutePlayers = players.filter(p => lineup?.substitutes?.includes(p.id))
 
   return (
     <main className="bg-[#0d1f12] min-h-screen py-12 px-4">
@@ -268,11 +268,11 @@ export default function IlkOnBirGoruntulePage() {
                 <h1 className="text-white text-3xl font-bold">İlk 11</h1>
                 <div className="flex items-center gap-4 mt-3">
                   <span className="inline-block bg-[#f0a500]/20 border border-[#f0a500]/30 text-[#f0a500] text-sm font-bold px-4 py-2 rounded-full">
-                    Formasyon: {lineup.formation}
+                    Formasyon: {lineup?.formation}
                   </span>
-                  {lineup.created_by_name && (
+                  {lineup?.created_by_name && (
                     <span className="text-gray-400 text-sm">
-                      Oluşturan: <span className="text-white font-semibold">{lineup.created_by_name}</span>
+                      Oluşturan: <span className="text-white font-semibold">{lineup?.created_by_name}</span>
                     </span>
                   )}
                 </div>
